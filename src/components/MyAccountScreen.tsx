@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Product, ActiveScreen, Order } from '../types';
-import { INITIAL_ACTIVE_ORDER } from '../data/aethelData';
 import { useLocalization } from '../context/LocalizationContext';
 import { useAuth } from '../context/AuthContext';
+import { listOrders } from '../services/commerceService';
+import { createContact } from '../services/catalogService';
 
 interface MyAccountScreenProps {
   onNavigate: (screen: ActiveScreen) => void;
@@ -10,19 +11,46 @@ interface MyAccountScreenProps {
   onSelectProduct: (p: Product) => void;
 }
 
+const EMPTY_ORDER: Order = {
+  id: '', orderNumber: '—', date: '', total: 0, status: 'Sem ordens', items: [], customerName: ''
+};
+
 export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
   onNavigate,
   favorites,
   onSelectProduct
 }) => {
-  const { formatPrice, t } = useLocalization();
-  const { user } = useAuth();
+  const { formatPrice } = useLocalization();
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<'painel' | 'ordens' | 'favoritos' | 'enderecos' | 'blocos' | 'faturas'>('painel');
-  const [order, setOrder] = useState<Order>(INITIAL_ACTIVE_ORDER);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [accountFeedback, setAccountFeedback] = useState<string | null>(null);
+  const order = orders[0] ?? EMPTY_ORDER;
+
+  useEffect(() => {
+    void listOrders()
+      .then(setOrders)
+      .catch(() => setOrders([]))
+      .finally(() => setOrdersLoading(false));
+  }, []);
+
+  if (!user) return null;
+
+  const requestConcierge = async (subject: string, message: string) => {
+    try {
+      await createContact({ name: user.name, email: user.email, phone: user.phone, subject, message });
+      setAccountFeedback('Pedido enviado ao Concierge.');
+    } catch (error) {
+      setAccountFeedback(error instanceof Error ? error.message : 'Não foi possível enviar o pedido.');
+    }
+  };
 
   return (
     <div className="w-full bg-[#faf9f7] pt-8 pb-20">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+        {ordersLoading && <p className="mb-4 text-xs text-[#7c766f]">A carregar as suas ordens…</p>}
+        {accountFeedback && <p role="status" className="mb-4 border border-[#cdc5bd] bg-white p-3 text-xs text-[#4a4640]">{accountFeedback}</p>}
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f] mb-6">
           <button onClick={() => onNavigate('home')} className="hover:text-black transition-colors">
@@ -37,14 +65,14 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
             ========================================== */}
         <div className="bg-white p-6 sm:p-8 border border-[#e9e8e6] shadow-xs mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
+            <div className="flex flex-col min-[420px]:flex-row min-[420px]:items-center gap-4 sm:gap-5 min-w-0">
               <img
                 src={user?.avatar || "https://lh3.googleusercontent.com/aida/AEtjO1X7_npcnp3WsXRdRLwlAatGP6-v7I2pr0CBvu6o1VAQMTGIKxcq90ZJ9f_z9dVX47dcBw5isRyGGS8Qp1O-FpN4mUafGaIHvi7kK6-sAkiqOTCQ2a7_ah0wRjNQN7rzMp_SZUktdN_13kCroYSJMWa3nFtHfIGUI6y2cKzSKExRXfY8n2w2fKpLJ6KNe8Hdyn8RxfhrpE2oYRNnnJyXGMFHTHpww8sWK_odYW1h44ANMrMY6BMkS_QkGZ6V"}
                 alt={user?.name || "Usuário VIP"}
                 className="w-20 h-20 rounded-full object-cover ring-4 ring-[#f4f3f1] shadow-sm"
               />
-              <div>
-                <div className="flex items-center gap-2 mb-1">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span className="px-2.5 py-0.5 bg-[#fec9ae] text-[#79523e] font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-wider">
                     {user?.role === 'admin' ? 'Acesso Master • Administrador' : user?.membershipLevel || 'Membro Aethel Partners • Nível Platina'}
                   </span>
@@ -63,7 +91,13 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
 
             <div className="flex flex-wrap items-center gap-3">
               <button
-                onClick={() => alert('Caixa de amostras de madeira e tecidos solicitada para entrega expressa.')}
+                onClick={() => void logout().then(() => onNavigate('home'))}
+                className="px-5 py-2.5 border border-[#cdc5bd] text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-xs font-semibold uppercase tracking-wider"
+              >
+                Terminar sessão
+              </button>
+              <button
+                onClick={() => void requestConcierge('Amostras físicas', 'Solicito uma caixa de amostras de madeira e tecidos.')}
                 className="px-5 py-2.5 bg-[#efeeec] hover:bg-[#e9e8e6] text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-xs font-semibold uppercase tracking-wider transition-colors flex items-center gap-2"
               >
                 <span className="material-symbols-outlined text-[16px]">inventory_2</span>
@@ -80,7 +114,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
           </div>
 
           {/* 4 Métricas de Desempenho do Atelier */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-[#e9e8e6]">
+        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-[#e9e8e6]">
             <div>
               <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-wider text-[#7c766f] block">
                 Investimento Acumulado
@@ -130,7 +164,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`pb-3.5 px-4 font-['Plus_Jakarta_Sans'] text-xs uppercase tracking-wider font-semibold border-b-2 flex items-center gap-1.5 transition-colors ${
                 activeTab === tab.id
                   ? 'border-black text-[#1a1c1b]'
@@ -177,12 +211,12 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
               </div>
 
               {/* Linha do Tempo em 5 Etapas do Fabrico Artesanal */}
-              <div>
+              <div className="overflow-x-auto pb-2">
                 <h4 className="font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider text-[#1a1c1b] mb-6">
                   Cronograma de Produção & Transporte Climatizado:
                 </h4>
 
-                <div className="relative">
+                <div className="relative min-w-[540px]">
                   {/* Linha conectora de fundo */}
                   <div className="absolute top-4 left-4 right-4 h-0.5 bg-[#e9e8e6] -z-0"></div>
                   <div className="absolute top-4 left-4 w-3/4 h-0.5 bg-black -z-0"></div>
@@ -256,7 +290,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                   {order.items.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex items-center justify-between gap-4"
+                      className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col min-[420px]:flex-row min-[420px]:items-center justify-between gap-3 min-[420px]:gap-4"
                     >
                       <div className="flex items-center gap-3">
                         <img
@@ -273,7 +307,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                         </div>
                       </div>
 
-                      <div className="text-right font-['Plus_Jakarta_Sans']">
+                      <div className="self-end min-[420px]:self-auto text-right font-['Plus_Jakarta_Sans']">
                         <span className="text-[10px] text-[#7c766f] block">Qtd: {item.quantity}</span>
                         <span className="text-xs font-bold text-[#1a1c1b]">
                           {formatPrice(item.price)}
@@ -319,7 +353,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                     <span>Ligar: +258 84 000 9200</span>
                   </a>
                   <button
-                    onClick={() => alert('Mensagem enviada diretamente ao Concierge via WhatsApp Corporativo.')}
+                    onClick={() => void requestConcierge('Contacto Concierge', 'Solicito contacto do Concierge sobre a minha conta e encomendas.')}
                     className="w-full py-2.5 bg-[#efeeec] hover:bg-[#e9e8e6] text-[#1a1c1b] font-semibold flex items-center justify-center gap-2 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[16px]">chat</span>
@@ -339,9 +373,10 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                       <span className="font-semibold text-[#1a1c1b] block">Sofá Nuvola 280</span>
                       <span className="text-[10px] text-[#7c766f]">Revit 2024 (.RFA) • 18MB</span>
                     </div>
-                    <button 
-                      onClick={() => alert('Download do modelo Revit iniciado.')}
-                      className="text-black hover:text-[#7d5540]"
+                    <button
+                      disabled
+                      title="Modelo Revit ainda não publicado"
+                      className="text-black opacity-40 cursor-not-allowed"
                     >
                       <span className="material-symbols-outlined text-[20px]">download</span>
                     </button>
@@ -352,9 +387,10 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                       <span className="font-semibold text-[#1a1c1b] block">Poltrona Kyoto</span>
                       <span className="text-[10px] text-[#7c766f]">SketchUp (.SKP) • 12MB</span>
                     </div>
-                    <button 
-                      onClick={() => alert('Download do modelo SketchUp iniciado.')}
-                      className="text-black hover:text-[#7d5540]"
+                    <button
+                      disabled
+                      title="Modelo SketchUp ainda não publicado"
+                      className="text-black opacity-40 cursor-not-allowed"
                     >
                       <span className="material-symbols-outlined text-[20px]">download</span>
                     </button>
@@ -409,31 +445,19 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
             <h3 className="font-['Playfair_Display'] text-2xl text-[#1a1c1b] font-normal mb-4">
               Histórico de Ordens de Fabrico
             </h3>
-            <div className="p-4 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-['Plus_Jakarta_Sans'] text-xs">
-              <div>
-                <span className="font-bold text-[#1a1c1b] block">Ordem #AET-2025-0892</span>
-                <span className="text-[#7c766f]">Emitida em 18 Fev 2025 • 3 Peças • Residencial Polana Cimento</span>
+            {orders.length === 0 && <p className="text-xs text-[#7c766f]">Ainda não existem ordens nesta conta.</p>}
+            {orders.map((item) => (
+              <div key={item.id} className="p-4 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-['Plus_Jakarta_Sans'] text-xs">
+                <div>
+                  <span className="font-bold text-[#1a1c1b] block">Ordem #{item.orderNumber}</span>
+                  <span className="text-[#7c766f]">Emitida em {new Date(item.date).toLocaleDateString('pt-MZ')} • {item.items.reduce((sum, line) => sum + line.quantity, 0)} peça(s)</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-[#1a1c1b]">{formatPrice(item.total)}</span>
+                  <span className="px-2.5 py-1 bg-[#7d5540] text-white text-[10px] uppercase font-bold">{item.status}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-[#1a1c1b]">139.320 MT</span>
-                <span className="px-2.5 py-1 bg-[#7d5540] text-white text-[10px] uppercase font-bold">
-                  Em Trânsito
-                </span>
-              </div>
-            </div>
-
-            <div className="p-4 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-['Plus_Jakarta_Sans'] text-xs opacity-75">
-              <div>
-                <span className="font-bold text-[#1a1c1b] block">Ordem #AET-2024-0419</span>
-                <span className="text-[#7c766f]">Emitida em 12 Nov 2024 • 4 Peças • Penthouse Sommerchield</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-[#1a1c1b]">273.180 MT</span>
-                <span className="px-2.5 py-1 bg-black text-white text-[10px] uppercase font-bold">
-                  Entregue
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
         )}
 
@@ -444,10 +468,10 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
               {activeTab} do Atelier
             </h3>
             <p className="font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">
-              Dados sincronizados diretamente com a base cadastral da Aethel Studio.
+              {activeTab === 'enderecos' ? 'As moradas usadas no checkout ficam protegidas na sua conta.' : 'Nenhum ficheiro foi publicado para esta área.'}
             </p>
             <div className="mt-6 p-4 bg-[#f4f3f1] border border-[#e9e8e6] text-xs font-['Plus_Jakarta_Sans'] text-[#4a4640]">
-              Todos os registros estão atualizados com certificado fiscal e alvará vigente.
+              {activeTab === 'enderecos' ? 'Pode cadastrar uma nova morada ao concluir uma encomenda.' : 'O Concierge notificará quando os documentos estiverem disponíveis.'}
             </div>
           </div>
         )}

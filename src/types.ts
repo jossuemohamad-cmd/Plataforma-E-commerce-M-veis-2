@@ -15,13 +15,28 @@ export type Currency = 'MZN' | 'USD' | 'EUR';
 export type Language = 'PT' | 'EN';
 
 export interface UserAccount {
+  id: string;
   name: string;
   email: string;
   role: 'admin' | 'architect' | 'client';
+  membershipLevel?: string;
   firmName?: string;
   nuit?: string;
   phone?: string;
   avatar?: string;
+  accountType?: 'residential' | 'architect';
+}
+
+export interface ProductVariant {
+  id: string;
+  sku: string;
+  name: string;
+  material?: string;
+  color?: string;
+  size?: string;
+  priceDelta: number;
+  stockQuantity: number;
+  imageUrl?: string;
 }
 
 export interface ColorSwatch {
@@ -44,8 +59,16 @@ export interface SizeOption {
   custom?: boolean;
 }
 
+export interface ProductDimensions {
+  width?: number;
+  height?: number;
+  depth?: number;
+  weight?: number;
+}
+
 export interface Product {
   id: string;
+  slug?: string;
   sku: string;
   title: string;
   category: string;
@@ -64,10 +87,11 @@ export interface Product {
   featured?: boolean;
   isNew?: boolean;
   tags?: string[];
-  dimensions?: any;
+  dimensions?: ProductDimensions | string;
   colorSwatches?: ColorSwatch[];
   materialOptions?: MaterialOption[];
   sizeOptions?: SizeOption[];
+  variants?: ProductVariant[];
   specs?: {
     [key: string]: string;
   };
@@ -79,6 +103,7 @@ export interface CartItem {
   selectedMaterial?: string;
   selectedSize?: string;
   selectedVariant?: string;
+  variantId?: string;
   unitPrice: number;
 }
 

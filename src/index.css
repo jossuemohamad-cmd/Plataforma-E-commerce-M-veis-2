@@ -41,6 +41,27 @@
     background-color: #faf9f7;
     margin: 0;
     padding: 0;
+    min-width: 320px;
+    overflow-x: clip;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button,
+  [role='button'] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 

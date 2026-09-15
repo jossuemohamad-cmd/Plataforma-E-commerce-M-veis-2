@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ActiveScreen } from '../types';
+import { subscribeNewsletter } from '../services/catalogService';
 
 interface FooterProps {
   onNavigate: (screen: ActiveScreen) => void;
@@ -8,15 +9,19 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    setSubscribed(true);
-    setTimeout(() => {
-      setSubscribed(false);
+    setFeedback(null);
+    try {
+      await subscribeNewsletter(email);
+      setSubscribed(true);
       setEmail('');
-    }, 4000);
+    } catch (error) {
+      setFeedback(error instanceof Error ? error.message : 'Não foi possível concluir a subscrição.');
+    }
   };
 
   return (
@@ -36,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <form onSubmit={handleSubscribe} className="flex w-full lg:w-auto items-stretch gap-0 max-w-md">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row w-full lg:w-auto items-stretch gap-2 sm:gap-0 max-w-md">
             <input
               type="email"
               value={email}
@@ -52,6 +57,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               {subscribed ? 'Subscrito!' : 'Subscrever'}
             </button>
           </form>
+          {feedback && <p role="alert" className="text-xs text-red-700">{feedback}</p>}
         </div>
       </div>
 
@@ -234,7 +240,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Legal bar */}
-        <div className="mt-12 pt-6 border-t border-[#e3e2e0] flex flex-col md:flex-row items-center justify-between gap-4 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">
+        <div className="mt-12 pt-6 border-t border-[#e3e2e0] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">
           <div className="flex flex-wrap items-center gap-3">
             <span>© 2025 Eden. Todos os direitos reservados.</span>
             <span className="hidden md:inline text-[#cdc5bd]">•</span>
@@ -245,7 +251,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span className="hover:text-[#1a1c1b] cursor-pointer">Pagamentos Seguros Criptografados</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[#7c766f] font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-semibold">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[#7c766f] font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-semibold">
             <span>Autenticidade Certificada</span>
             <span>•</span>
             <span>Design Escultural</span>

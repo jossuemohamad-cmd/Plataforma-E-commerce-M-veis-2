@@ -1,51 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActiveScreen } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
+import { DashboardOrder, getDashboardData, updateOrderStatus } from '../services/adminService';
 
 interface DashboardScreenProps {
   onNavigate: (screen: ActiveScreen) => void;
 }
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) => {
-  const { formatPrice, t } = useLocalization();
-  const recentOrders = [
-    {
-      id: 'AET-2025-0892',
-      client: 'Arq. Beatriz Mendes • Atelier Platina',
-      project: 'Residencial Polana Cimento (4º Andar)',
-      items: 'Sofá Nuvola, Poltrona Kyoto, Mesa Monolito',
-      value: 139320,
-      deadline: '28 Fev 2025',
-      status: 'Em Trânsito Especial'
-    },
-    {
-      id: 'AET-2025-0891',
-      client: 'Studio Marés Arquitetura',
-      project: 'Villa Mar Azul • Vilankulo',
-      items: '2x Sofás Brisa Náutica, Cama Solene King',
-      value: 294500,
-      deadline: '04 Mar 2025',
-      status: 'Tapeçaria & Estofamento'
-    },
-    {
-      id: 'AET-2025-0889',
-      client: 'Gabinete Urbano Maputo',
-      project: 'Sede Corporativa Sommerschield',
-      items: 'Mesa Reunião Nogueira Real, 8x Poltronas',
-      value: 418000,
-      deadline: '10 Mar 2025',
-      status: 'Marcenaria de Maciços'
-    },
-    {
-      id: 'AET-2025-0886',
-      client: 'Arq. Carlos Fornasini',
-      project: 'Residencial Triunfo II',
-      items: 'Estante Modular Vértice, Mesa Monolito',
-      value: 98200,
-      deadline: '15 Mar 2025',
-      status: 'Corte de Rochas Naturais'
-    }
-  ];
+  const { formatPrice } = useLocalization();
+  const [recentOrders, setRecentOrders] = useState<DashboardOrder[]>([]);
+  const [metrics, setMetrics] = useState({ revenue: 0, processing: 0, average: 0 });
+
+  const loadDashboard = async () => {
+    const data = await getDashboardData();
+      setMetrics({ revenue: data.revenue, processing: data.processing, average: data.average });
+      setRecentOrders(data.orders);
+  };
+
+  useEffect(() => {
+    void loadDashboard();
+  }, []);
+
+  const exportOrders = () => {
+    const csv = ['Ordem,Cliente,Itens,Valor,Estado', ...recentOrders.map((order) =>
+      [order.id, order.client, order.items, order.value, order.status].map((value) => `"${String(value).replaceAll('"', '""')}"`).join(',')
+    )].join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `eden-ordens-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="w-full bg-[#faf9f7] pt-8 pb-20">
@@ -73,16 +60,16 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <button
               onClick={() => onNavigate('gestao')}
-              className="px-5 py-2.5 bg-[#efeeec] hover:bg-[#e9e8e6] text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors"
+              className="w-full sm:w-auto px-5 py-2.5 bg-[#efeeec] hover:bg-[#e9e8e6] text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors"
             >
               Gerenciar Acervo
             </button>
             <button
-              onClick={() => alert('Relatório analítico em PDF emitido para download.')}
-              className="px-5 py-2.5 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-2 shadow-xs"
+              onClick={exportOrders}
+              className="w-full sm:w-auto justify-center px-5 py-2.5 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-2 shadow-xs"
             >
               <span className="material-symbols-outlined text-[16px]">file_download</span>
               <span>Exportar Balanço MT</span>
@@ -100,7 +87,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
               <span className="material-symbols-outlined text-[18px]">payments</span>
             </div>
             <div className="font-['Playfair_Display'] text-3xl font-normal text-[#1a1c1b]">
-              3.840.000 MT
+              {formatPrice(metrics.revenue)}
             </div>
             <span className="font-['Plus_Jakarta_Sans'] text-[11px] text-emerald-700 font-semibold block mt-1">
               ↑ +18.4% vs mês anterior
@@ -115,7 +102,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
               <span className="material-symbols-outlined text-[18px]">handyman</span>
             </div>
             <div className="font-['Playfair_Display'] text-3xl font-normal text-[#1a1c1b]">
-              14 Lotes
+              {metrics.processing} Lotes
             </div>
             <span className="font-['Plus_Jakarta_Sans'] text-[11px] text-[#7d5540] font-semibold block mt-1">
               4 oficinas artesanais ativas
@@ -130,7 +117,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
               <span className="material-symbols-outlined text-[18px]">domain</span>
             </div>
             <div className="font-['Playfair_Display'] text-3xl font-normal text-[#1a1c1b]">
-              182.400 MT
+              {formatPrice(metrics.average)}
             </div>
             <span className="font-['Plus_Jakarta_Sans'] text-[11px] text-[#7c766f] block mt-1">
               Por especificação de arquiteto
@@ -217,7 +204,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
             </h3>
 
             <div className="space-y-4 font-['Plus_Jakarta_Sans'] text-xs">
-              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex items-center justify-between">
+              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <span className="font-bold text-[#1a1c1b] block">Oficina 1 • Marcenaria Fina & Maciços</span>
                   <span className="text-[#7c766f] text-[11px]">6 mestres marceneiros • Nogueira & Carvalho</span>
@@ -229,7 +216,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
                 </div>
               </div>
 
-              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex items-center justify-between">
+              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <span className="font-bold text-[#1a1c1b] block">Oficina 2 • Tapeçaria & Alfaiataria Têxtil</span>
                   <span className="text-[#7c766f] text-[11px]">4 alfaiates • Linhos Belgas & Bouclés</span>
@@ -241,7 +228,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
                 </div>
               </div>
 
-              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex items-center justify-between">
+              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <span className="font-bold text-[#1a1c1b] block">Oficina 3 • Cantaria & Mármores Travertino</span>
                   <span className="text-[#7c766f] text-[11px]">3 marmoristas • Corte de monólitos</span>
@@ -253,7 +240,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
                 </div>
               </div>
 
-              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex items-center justify-between">
+              <div className="p-3 bg-[#faf9f7] border border-[#e9e8e6] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <span className="font-bold text-[#1a1c1b] block">Logística • Frotas Climatizadas Luva Branca</span>
                   <span className="text-[#7c766f] text-[11px]">2 carrinhas ativas em Maputo & Matola</span>
@@ -270,7 +257,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
 
         {/* Tabela de Ordens B2B Recentes */}
         <div className="bg-white border border-[#e9e8e6] shadow-xs p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
               <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-widest text-[#7d5540] block mb-0.5">
                 Pipeline de Produção
@@ -280,7 +267,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
               </h3>
             </div>
             <button
-              onClick={() => alert('Todas as ordens exportadas para planilha')}
+              onClick={exportOrders}
               className="text-xs font-['Plus_Jakarta_Sans'] font-semibold text-[#7d5540] hover:underline"
             >
               Ver Todas as Ordens →
@@ -288,7 +275,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left font-['Plus_Jakarta_Sans'] text-xs">
+            <table className="w-full min-w-[900px] text-left font-['Plus_Jakarta_Sans'] text-xs">
               <thead>
                 <tr className="border-b border-[#e9e8e6] text-[#7c766f] uppercase font-bold text-[10px] tracking-wider pb-3">
                   <th className="py-2.5">Código Ordem</th>
@@ -310,9 +297,14 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
                     <td className="py-3 font-bold text-[#1a1c1b]">{formatPrice(ord.value)}</td>
                     <td className="py-3 text-[#7c766f]">{ord.deadline}</td>
                     <td className="py-3 text-right">
-                      <span className="px-2 py-0.5 bg-[#efeeec] text-[#1a1c1b] font-bold text-[10px] uppercase">
-                        {ord.status}
-                      </span>
+                      <select
+                        value={ord.status}
+                        onChange={(event) => void updateOrderStatus(ord.orderId, event.target.value).then(loadDashboard)}
+                        className="px-2 py-1 bg-[#efeeec] text-[#1a1c1b] font-bold text-[10px] uppercase border-0"
+                        aria-label={`Estado da ordem ${ord.id}`}
+                      >
+                        {['pending', 'confirmed', 'processing', 'ready', 'shipped', 'delivered', 'cancelled'].map((status) => <option key={status} value={status}>{status}</option>)}
+                      </select>
                     </td>
                   </tr>
                 ))}

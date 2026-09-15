@@ -31,6 +31,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
 
   const ambientesList = [
     { label: 'Todos', count: products.length },
@@ -138,12 +139,31 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
           </div>
         </div>
 
+        <button
+          type="button"
+          onClick={() => setShowFilters((visible) => !visible)}
+          aria-expanded={showFilters}
+          aria-controls="catalog-filters"
+          className="lg:hidden w-full mb-4 min-h-11 px-4 bg-white border border-[#cdc5bd] flex items-center justify-between font-['Plus_Jakarta_Sans'] text-sm font-semibold"
+        >
+          <span className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[20px]">tune</span>
+            Filtrar peças
+          </span>
+          <span className="material-symbols-outlined text-[20px]">
+            {showFilters ? 'expand_less' : 'expand_more'}
+          </span>
+        </button>
+
         {/* Layout Principal: Filtros Laterais + Grid de Peças */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* ==========================================
               SIDEBAR DE FILTROS REAIS
               ========================================== */}
-          <aside className="lg:col-span-3 flex flex-col gap-8 bg-white lg:bg-transparent p-6 lg:p-0 border lg:border-none border-[#e9e8e6] shadow-xs lg:shadow-none">
+          <aside
+            id="catalog-filters"
+            className={`${showFilters ? 'flex' : 'hidden'} lg:col-span-3 lg:flex flex-col gap-6 lg:gap-8 bg-white lg:bg-transparent p-4 sm:p-6 lg:p-0 border lg:border-none border-[#e9e8e6] shadow-xs lg:shadow-none`}
+          >
             {/* Busca Interna do Catálogo */}
             <div>
               <label className="font-['Plus_Jakarta_Sans'] text-xs font-semibold uppercase tracking-wider text-[#1a1c1b] block mb-2">
@@ -306,12 +326,12 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
                 )}
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col min-[420px]:flex-row min-[420px]:items-center gap-2 min-[420px]:gap-3">
                 <span className="font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">Ordenar:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-transparent font-['Plus_Jakarta_Sans'] text-xs font-semibold text-[#1a1c1b] focus:outline-none cursor-pointer border-b border-black pb-0.5"
+                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                  className="w-full min-[420px]:w-auto bg-transparent font-['Plus_Jakarta_Sans'] text-sm sm:text-xs font-semibold text-[#1a1c1b] focus:outline-none cursor-pointer border border-[#cdc5bd] min-h-11 px-3 sm:min-h-0 sm:border-x-0 sm:border-t-0 sm:border-b-black sm:px-0 sm:pb-0.5"
                 >
                   <option value="featured">Destaques da Curadoria</option>
                   <option value="price-asc">Investimento: Menor para Maior</option>
@@ -390,7 +410,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
                           e.stopPropagation();
                           onAddToCart(p);
                         }}
-                        className="absolute bottom-0 inset-x-0 py-3 bg-black text-white font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 hover:bg-[#7d5540]"
+                        className="absolute bottom-0 inset-x-0 py-3 bg-black text-white font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-wider opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 hover:bg-[#7d5540]"
                       >
                         <span className="material-symbols-outlined text-[16px]">shopping_bag</span>
                         {t('btn.quick_add', 'Adicionar')} • {formatPrice(p.price)}

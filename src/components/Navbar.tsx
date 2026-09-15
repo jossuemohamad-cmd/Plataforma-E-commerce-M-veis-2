@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ActiveScreen, Product, Currency, Language } from '../types';
-import { AETHEL_PRODUCTS } from '../data/aethelData';
 import { useLocalization } from '../context/LocalizationContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -38,11 +37,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Fallback to AETHEL_PRODUCTS if products prop is empty
-  const catalog = products.length > 0 ? products : AETHEL_PRODUCTS;
+  const catalog = products;
 
   // Exact pages of the application with translation keys
-  const navPages: { id: ActiveScreen; key: string; label: string }[] = [
+  const navPages = ([
     { id: 'home', key: 'nav.home', label: t('nav.home', 'Início') },
     { id: 'catalogo', key: 'nav.catalogo', label: t('nav.catalogo', 'Coleções') },
     { id: 'showrooms', key: 'nav.showrooms', label: t('nav.showrooms', 'Showrooms') },
@@ -50,7 +48,12 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'autenticacao', key: 'nav.portal_vip', label: t('nav.portal_vip', 'Portal VIP') },
     { id: 'gestao', key: 'nav.gestao', label: t('nav.gestao', 'Gestão Acervo') },
     { id: 'dashboard', key: 'nav.dashboard', label: t('nav.dashboard', 'Painel B2B') }
-  ];
+  ] satisfies { id: ActiveScreen; key: string; label: string }[]).filter((page) => {
+    if (page.id === 'gestao' || page.id === 'dashboard') return isAdmin;
+    if (page.id === 'autenticacao') return !user;
+    if (page.id === 'minha-conta') return Boolean(user);
+    return true;
+  });
 
   // Quick keyword filters for instant search
   const quickKeywords = [
@@ -145,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-[#4a4640]">
+            <div className="hidden sm:flex items-center gap-3 sm:gap-4 shrink-0 text-[#4a4640]">
               {/* Currency Selector with Dropdown */}
               <div className="relative">
                 <button
@@ -260,7 +263,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Main Bar */}
-        <div className="h-20 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-4">
+        <div className="h-16 sm:h-20 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-2 sm:gap-4">
           {/* Brand Logo */}
           <button
             onClick={() => onNavigate('home')}
@@ -316,7 +319,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Favorites Icon */}
             <button
               onClick={handleFavClick}
-              className="relative text-[#4a4640] hover:text-[#1a1c1b] p-2 hover:bg-[#efeeec] rounded-full transition-colors flex items-center justify-center"
+              className="relative text-[#4a4640] hover:text-[#1a1c1b] p-2.5 hover:bg-[#efeeec] rounded-full transition-colors hidden sm:flex items-center justify-center"
               title="Ver Favoritos"
             >
               <span className="material-symbols-outlined text-[22px]">favorite</span>
@@ -330,7 +333,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Shopping Bag / Cart */}
             <button
               onClick={onOpenCart}
-              className="relative text-[#4a4640] hover:text-[#1a1c1b] p-2 hover:bg-[#efeeec] rounded-full transition-colors flex items-center justify-center"
+              className="relative text-[#4a4640] hover:text-[#1a1c1b] p-2.5 hover:bg-[#efeeec] rounded-full transition-colors flex items-center justify-center"
               title="Ver Carrinho de Compras"
             >
               <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
@@ -342,7 +345,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* User Profile Avatar with Role Tag */}
-            <div
+            {user ? <div
               onClick={() => {
                 if (isAdmin) {
                   onNavigate('gestao');
@@ -350,7 +353,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onNavigate('minha-conta');
                 }
               }}
-              className="flex items-center gap-1.5 pl-1 cursor-pointer group"
+              className="hidden sm:flex items-center gap-1.5 pl-1 cursor-pointer group"
               title={`Sessão: ${user.name} (${isAdmin ? 'Administrador' : 'VIP'})`}
             >
               <div className="relative">
@@ -367,12 +370,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 )}
               </div>
-            </div>
+            </div> : <button
+              type="button"
+              onClick={() => onNavigate('autenticacao')}
+              className="hidden sm:flex p-2.5 text-[#4a4640] hover:text-black"
+              aria-label="Iniciar sessão"
+              title="Iniciar sessão"
+            >
+              <span className="material-symbols-outlined text-[22px]">person</span>
+            </button>}
 
             {/* Mobile hamburger menu toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 text-[#4a4640] hover:text-[#1a1c1b] rounded-full hover:bg-[#efeeec]"
+              className="xl:hidden p-2.5 text-[#4a4640] hover:text-[#1a1c1b] rounded-full hover:bg-[#efeeec]"
               aria-label="Menu de Navegação"
             >
               <span className="material-symbols-outlined text-[24px]">
@@ -384,10 +395,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-6 py-5 space-y-4 shadow-xl max-h-[80vh] overflow-y-auto">
+          <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-4 sm:px-6 py-4 sm:py-5 space-y-4 shadow-xl max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain">
             {/* Currency & Language in Mobile Drawer */}
-            <div className="flex items-center justify-between pb-3 border-b border-[#e9e8e6] text-xs">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e9e8e6] text-xs">
+              <div className="flex items-center justify-between sm:justify-start gap-2">
                 <span className="text-[#7c766f]">Moeda:</span>
                 {(['MZN', 'USD', 'EUR'] as Currency[]).map((c) => (
                   <button
@@ -402,7 +413,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ))}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between sm:justify-start gap-2">
                 <span className="text-[#7c766f]">Idioma:</span>
                 {(['PT', 'EN'] as Language[]).map((l) => (
                   <button
@@ -428,7 +439,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[18px] text-[#1a1c1b]">search</span>
-                <span>{t('search.placeholder', 'Pesquisar no acervo autoral...')}</span>
+                <span className="truncate">{t('search.placeholder', 'Pesquisar no acervo autoral...')}</span>
               </span>
               <span className="text-[10px] uppercase font-bold text-[#7d5540]">AJAX</span>
             </div>

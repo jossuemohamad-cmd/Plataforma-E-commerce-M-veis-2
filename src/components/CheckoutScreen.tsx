@@ -6,45 +6,84 @@ interface CheckoutScreenProps {
   cart: CartItem[];
   onNavigate: (screen: ActiveScreen) => void;
   onClearCart: () => void;
+  onPlaceOrder: (data: {
+    address: { label: string; recipientName: string; phone: string; line1: string; city: string; province: string };
+    paymentMethod: 'transfer' | 'pos' | 'card';
+    couponCode?: string;
+    deliveryNotes?: string;
+  }) => Promise<{ order_number: string; total: number }>;
 }
 
 export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
   cart,
   onNavigate,
-  onClearCart
+  onClearCart,
+  onPlaceOrder
 }) => {
-  const { formatPrice, t } = useLocalization();
+  const { formatPrice } = useLocalization();
   const [selectedAddress, setSelectedAddress] = useState<1 | 2>(1);
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'pos' | 'card'>('transfer');
   const [hasElevator, setHasElevator] = useState(true);
   const [hasWideStairs, setHasWideStairs] = useState(true);
   const [hasRestrictedHours, setHasRestrictedHours] = useState(false);
   const [couponCode, setCouponCode] = useState('BEMVINDO10');
-  const [couponApplied, setCouponApplied] = useState(true);
+  const [couponApplied, setCouponApplied] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(true);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const [recipientName, setRecipientName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [addressLine, setAddressLine] = useState('');
+  const [city, setCity] = useState('Maputo');
+  const [province, setProvince] = useState('Maputo Cidade');
+  const [submitting, setSubmitting] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<{ order_number: string; total: number } | null>(null);
 
   // Calculate Subtotal
   const subtotal = cart.length > 0
     ? cart.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0)
-    : 139320; // Default matching prototype if empty
+    : 0;
 
-  const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
+  // O desconto final nunca é confiado ao navegador; a RPC valida e recalcula no servidor.
+  const discount = 0;
   const total = subtotal - discount;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!acceptTerms) {
-      alert('Por favor, aceite os termos de produção e entrega para continuar.');
+      setCheckoutError('Por favor, aceite os termos de produção e entrega para continuar.');
       return;
     }
-    setOrderConfirmed(true);
-    onClearCart();
+    if (!recipientName.trim() || !phone.trim() || !addressLine.trim() || !city.trim() || !province.trim()) {
+      setCheckoutError('Preencha o titular, telefone e morada de entrega.');
+      return;
+    }
+    if (cart.length === 0) {
+      setCheckoutError('O carrinho está vazio.');
+      return;
+    }
+    setSubmitting(true);
+    setCheckoutError(null);
+    try {
+      const order = await onPlaceOrder({
+        address: { label: 'Entrega principal', recipientName, phone, line1: addressLine, city, province },
+        paymentMethod,
+        couponCode: couponApplied ? couponCode : undefined,
+        deliveryNotes: `Elevador: ${hasElevator ? 'sim' : 'não'}; escadas largas: ${hasWideStairs ? 'sim' : 'não'}; horário restrito: ${hasRestrictedHours ? 'sim' : 'não'}`
+      });
+      setConfirmedOrder(order);
+      setOrderConfirmed(true);
+      onClearCart();
+    } catch (error) {
+      setCheckoutError(error instanceof Error ? error.message : 'Não foi possível emitir a ordem.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (orderConfirmed) {
     return (
       <div className="w-full bg-[#faf9f7] py-20 min-h-[70vh] flex items-center justify-center">
-        <div className="max-w-xl w-full mx-auto px-4 text-center bg-white p-10 border border-[#e9e8e6] shadow-xl">
+        <div className="max-w-xl w-full mx-auto text-center bg-white p-5 sm:p-10 border border-[#e9e8e6] shadow-xl">
           <div className="w-16 h-16 rounded-full bg-[#efeeec] text-[#7d5540] flex items-center justify-center mx-auto mb-4">
             <span className="material-symbols-outlined text-[36px]">verified</span>
           </div>
@@ -58,17 +97,17 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
           </h2>
 
           <p className="font-['Plus_Jakarta_Sans'] text-sm text-[#4a4640] mt-3 leading-relaxed">
-            Agradecemos a preferência, <strong>Arq. Beatriz Mendes</strong>. O seu pedido foi encaminhado ao ateliê sob a referência <strong>#AET-2025-0892</strong>. O nosso Concierge entrará em contacto dentro de 2 horas para alinhamento dos ensaios de lote e agendamento de entrega.
+            Agradecemos a preferência, <strong>{recipientName}</strong>. O pedido foi encaminhado ao ateliê sob a referência <strong>#{confirmedOrder?.order_number}</strong>.
           </p>
 
           <div className="p-4 bg-[#f4f3f1] border border-[#e9e8e6] text-left my-6 text-xs font-['Plus_Jakarta_Sans'] space-y-1.5">
             <div className="flex justify-between">
               <span className="text-[#7c766f]">Referência:</span>
-              <span className="font-mono font-bold text-[#1a1c1b]">#AET-2025-0892</span>
+              <span className="font-mono font-bold text-[#1a1c1b]">#{confirmedOrder?.order_number}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#7c766f]">Investimento Líquido:</span>
-              <span className="font-bold text-[#1a1c1b]">{formatPrice(total)}</span>
+              <span className="font-bold text-[#1a1c1b]">{formatPrice(confirmedOrder?.total ?? total)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#7c766f]">Previsão de Entrega:</span>
@@ -144,7 +183,9 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   </label>
                   <input
                     type="text"
-                    defaultValue="Arq. Beatriz Mendes • Atelier Platina"
+                    value={recipientName}
+                    onChange={(event) => setRecipientName(event.target.value)}
+                    required
                     className="w-full bg-[#f4f3f1] px-3.5 py-2.5 text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none"
                   />
                 </div>
@@ -177,7 +218,9 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   </label>
                   <input
                     type="tel"
-                    defaultValue="+258 84 920 1840"
+                    value={phone}
+                    onChange={(event) => setPhone(event.target.value)}
+                    required
                     className="w-full bg-[#f4f3f1] px-3.5 py-2.5 text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none font-mono"
                   />
                 </div>
@@ -247,6 +290,21 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 font-['Plus_Jakarta_Sans'] text-xs">
+                <label className="sm:col-span-2 text-[10px] uppercase font-semibold text-[#7c766f]">
+                  Endereço completo
+                  <input value={addressLine} onChange={(event) => setAddressLine(event.target.value)} required placeholder="Avenida, número, andar e bairro" className="mt-1 w-full bg-[#f4f3f1] px-3.5 py-2.5 text-xs normal-case font-normal text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none" />
+                </label>
+                <label className="text-[10px] uppercase font-semibold text-[#7c766f]">
+                  Cidade
+                  <input value={city} onChange={(event) => setCity(event.target.value)} required className="mt-1 w-full bg-[#f4f3f1] px-3.5 py-2.5 text-xs normal-case font-normal text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none" />
+                </label>
+                <label className="text-[10px] uppercase font-semibold text-[#7c766f]">
+                  Província
+                  <input value={province} onChange={(event) => setProvince(event.target.value)} required className="mt-1 w-full bg-[#f4f3f1] px-3.5 py-2.5 text-xs normal-case font-normal text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none" />
+                </label>
+              </div>
+
               {/* Condições de Acesso */}
               <div className="pt-4 border-t border-[#e9e8e6]">
                 <span className="font-['Plus_Jakarta_Sans'] text-xs font-semibold uppercase tracking-wider text-[#1a1c1b] block mb-2.5">
@@ -295,7 +353,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 </h3>
               </div>
 
-              <div className="p-4 bg-[#faf9f7] border border-black flex items-start justify-between gap-4">
+              <div className="p-4 bg-[#faf9f7] border border-black flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                   <span className="material-symbols-outlined text-[#7d5540] text-[24px] mt-0.5">front_hand</span>
                   <div>
@@ -307,7 +365,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                     </p>
                   </div>
                 </div>
-                <span className="font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#7d5540] whitespace-nowrap uppercase">
+                <span className="self-end sm:self-auto font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#7d5540] whitespace-nowrap uppercase">
                   Gratuito
                 </span>
               </div>
@@ -416,13 +474,13 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 </h3>
               </div>
 
-              <div className="flex items-stretch max-w-md">
+              <div className="flex flex-col min-[420px]:flex-row items-stretch max-w-md gap-2 min-[420px]:gap-0">
                 <input
                   type="text"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   placeholder="Ex: ARQBEATRIZ10"
-                  className="flex-1 bg-[#f4f3f1] px-3.5 py-2.5 font-mono text-xs text-[#1a1c1b] border border-r-0 border-[#cdc5bd] uppercase focus:bg-white focus:outline-none"
+                  className="min-w-0 flex-1 bg-[#f4f3f1] px-3.5 py-2.5 font-mono text-sm text-[#1a1c1b] border min-[420px]:border-r-0 border-[#cdc5bd] uppercase focus:bg-white focus:outline-none"
                 />
                 <button
                   type="button"
@@ -433,12 +491,12 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   }}
                   className="px-5 bg-black text-white font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider hover:bg-[#7d5540] transition-colors"
                 >
-                  {couponApplied ? 'Aplicado' : 'Aplicar'}
+                  {couponApplied ? 'Será validado' : 'Usar código'}
                 </button>
               </div>
               {couponApplied && (
                 <span className="text-[11px] font-['Plus_Jakarta_Sans'] text-[#7d5540] font-semibold mt-2 block">
-                  ✓ Cupom BEMVINDO10 aplicado: 10% de benefício curatorial deduzido no total.
+                  O código será validado no servidor ao confirmar; o total final será recalculado com segurança.
                 </span>
               )}
             </div>
@@ -466,12 +524,15 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 </span>
               </label>
 
+              {checkoutError && <p role="alert" className="mt-4 border border-red-200 bg-red-50 p-3 text-xs text-red-800">{checkoutError}</p>}
+
               <button
                 type="button"
-                onClick={handlePlaceOrder}
-                className="w-full mt-6 py-4 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-[0.18em] transition-colors shadow-md text-center"
+                onClick={() => void handlePlaceOrder()}
+                disabled={submitting || cart.length === 0}
+                className="w-full mt-6 py-4 bg-black text-white hover:bg-[#7d5540] disabled:opacity-50 disabled:cursor-not-allowed font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-[0.18em] transition-colors shadow-md text-center"
               >
-                Confirmar e Emitir Caderno de Pedido
+                {submitting ? 'A emitir ordem…' : 'Confirmar e Emitir Caderno de Pedido'}
               </button>
             </div>
           </div>
@@ -479,7 +540,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
           {/* ==========================================
               COLUNA DIREITA: CADERNO DE COMPRA (STICKY)
               ========================================== */}
-          <aside className="lg:col-span-4 sticky top-28 bg-white p-6 sm:p-7 border border-[#e9e8e6] shadow-md space-y-6">
+          <aside className="lg:col-span-4 lg:sticky lg:top-28 bg-white p-4 sm:p-7 border border-[#e9e8e6] shadow-md space-y-6">
             <div className="border-b border-[#e9e8e6] pb-4">
               <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-widest text-[#7d5540]">
                 Resumo da Aquisição

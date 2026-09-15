@@ -8,7 +8,7 @@ interface AuthScreenProps {
 }
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
-  const { login, quickAdminLogin, quickArchitectLogin, register, user, isAdmin } = useAuth();
+  const { login, register, resetPassword, isAdmin, configured } = useAuth();
   const { t } = useLocalization();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -16,60 +16,68 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Form states
-  const [email, setEmail] = useState('beatriz.mendes@arquitetura.co.mz');
-  const [password, setPassword] = useState('aethel2025');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [firmName, setFirmName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [authFeedback, setAuthFeedback] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const role = login(email, password);
-    setAuthFeedback(`Autenticado com sucesso como ${role === 'admin' ? 'Administrador' : 'Arquiteto VIP'}!`);
-    setTimeout(() => {
-      if (role === 'admin') {
-        onNavigate('gestao');
-      } else {
-        onNavigate('minha-conta');
-      }
-    }, 400);
+    setSubmitting(true);
+    setAuthFeedback(null);
+    try {
+      const account = await login(email, password);
+      setAuthFeedback('Sessão iniciada com segurança.');
+      onNavigate(account.role === 'admin' ? 'gestao' : 'minha-conta');
+    } catch (error) {
+      setAuthFeedback(error instanceof Error ? error.message : 'Não foi possível iniciar sessão.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleQuickAdmin = () => {
-    setEmail('admin@aethel.mz');
-    setPassword('admin123');
-    const role = quickAdminLogin();
-    setAuthFeedback('Acesso de Administrador concedido! Redirecionando para Gestão...');
-    setTimeout(() => {
-      onNavigate('gestao');
-    }, 450);
-  };
-
-  const handleQuickArchitect = () => {
-    setEmail('beatriz.mendes@arquitetura.co.mz');
-    setPassword('aethel2025');
-    quickArchitectLogin();
-    setAuthFeedback('Acesso VIP Arquiteto concedido! Redirecionando para Minha Conta...');
-    setTimeout(() => {
-      onNavigate('minha-conta');
-    }, 450);
-  };
-
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !regEmail) return;
-    register({
-      name,
-      email: regEmail,
-      firmName: accountType === 'architect' ? firmName : undefined,
-      accountType
-    });
-    setAuthFeedback('Conta exclusiva criada com sucesso! Acessando sua área...');
-    setTimeout(() => {
-      onNavigate('minha-conta');
-    }, 500);
+    setSubmitting(true);
+    setAuthFeedback(null);
+    try {
+      const result = await register({
+        name,
+        email: regEmail,
+        password: regPassword,
+        firmName: accountType === 'architect' ? firmName : undefined,
+        accountType
+      });
+      if (result.needsEmailConfirmation) {
+        setAuthFeedback('Conta criada. Confirme o endereço através do e-mail enviado.');
+        setMode('login');
+      } else {
+        setAuthFeedback('Conta criada e sessão iniciada.');
+        onNavigate('minha-conta');
+      }
+    } catch (error) {
+      setAuthFeedback(error instanceof Error ? error.message : 'Não foi possível criar a conta.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email) {
+      setAuthFeedback('Informe primeiro o seu e-mail.');
+      return;
+    }
+    try {
+      await resetPassword(email);
+      setAuthFeedback('Enviámos as instruções de recuperação para o seu e-mail.');
+    } catch (error) {
+      setAuthFeedback(error instanceof Error ? error.message : 'Falha ao solicitar recuperação.');
+    }
   };
 
   return (
@@ -78,7 +86,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
         {/* ==========================================
             COLUNA ESQUERDA: EDITORIAL ARQUITETÔNICO
             ========================================== */}
-        <div className="relative lg:col-span-5 bg-[#1c1b1a] text-white p-8 sm:p-10 flex flex-col justify-between overflow-hidden">
+        <div className="relative lg:col-span-5 bg-[#1c1b1a] text-white p-5 sm:p-10 flex flex-col justify-between overflow-hidden">
           {/* Foto de fundo com scrim suave */}
           <div className="absolute inset-0 z-0">
             <img
@@ -166,30 +174,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
             </div>
           )}
 
-          {/* CREDENCIAIS DEMO RÁPIDAS (Atende o pedido do usuário) */}
-          <div className="mt-5 p-3.5 bg-[#f7f6f4] border border-[#e3e1dd]">
+          {!configured && <div className="mt-5 p-3.5 bg-amber-50 border border-amber-300 text-amber-900 text-xs">
             <span className="block text-[10px] font-bold uppercase tracking-wider text-[#7c766f] mb-2">
-              Acesso Rápido para Teste do MVP:
+              Configuração necessária
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={handleQuickAdmin}
-                className="px-3 py-2 bg-[#1a1c1b] text-white hover:bg-[#7d5540] transition-colors text-[11px] font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm"
-              >
-                <span className="material-symbols-outlined text-[16px] text-[#fec9ae]">admin_panel_settings</span>
-                <span>Entrar como Admin</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleQuickArchitect}
-                className="px-3 py-2 bg-white border border-[#cdc5bd] hover:border-black text-[#1a1c1b] transition-colors text-[11px] font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-[16px]">architecture</span>
-                <span>Entrar como Arquiteto VIP</span>
-              </button>
-            </div>
-          </div>
+            Defina as variáveis públicas do Supabase em <code>.env.local</code> para ativar autenticação e dados reais.
+          </div>}
 
           {/* Abas Iniciar Sessão vs Criar Conta */}
           <div className="flex border-b border-[#e9e8e6] mt-6 mb-6">
@@ -235,7 +225,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
                   </label>
                   <button
                     type="button"
-                    onClick={() => alert('Dica: Use "admin123" para admin ou qualquer senha para arquiteto.')}
+                    onClick={() => void handleResetPassword()}
                     className="text-[11px] text-[#7d5540] hover:underline"
                   >
                     Esqueceu a palavra-passe?
@@ -270,9 +260,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
 
               <button
                 type="submit"
+                disabled={submitting || !configured}
                 className="w-full py-4 bg-black text-white hover:bg-[#7d5540] text-[11px] uppercase font-semibold tracking-[0.16em] transition-colors shadow-sm mt-2"
               >
-                Aceder ao Portal Concierge
+                {submitting ? 'A autenticar…' : 'Aceder ao Portal Concierge'}
               </button>
 
               <div className="relative my-4 text-center">
@@ -284,7 +275,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => onNavigate('gestao')}
@@ -309,7 +300,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
           {mode === 'register' && (
             <form onSubmit={handleRegisterSubmit} className="space-y-4 font-['Plus_Jakarta_Sans'] text-xs">
               {/* Seletor de Tipo de Conta */}
-              <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
                 <button
                   type="button"
                   onClick={() => setAccountType('residential')}
@@ -398,9 +389,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
 
               <button
                 type="submit"
+                disabled={submitting || !configured}
                 className="w-full py-4 bg-black text-white hover:bg-[#7d5540] text-[11px] uppercase font-semibold tracking-[0.16em] transition-colors shadow-sm mt-2"
               >
-                Concluir Cadastro VIP
+                {submitting ? 'A criar conta…' : 'Concluir Cadastro VIP'}
               </button>
             </form>
           )}

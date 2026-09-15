@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Product, ActiveScreen } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
 
@@ -6,7 +6,7 @@ interface ProductDetailScreenProps {
   product: Product;
   allProducts: Product[];
   onSelectProduct: (p: Product) => void;
-  onAddToCart: (p: Product, quantity?: number, selectedMaterial?: string, selectedSize?: string, unitPrice?: number) => void;
+  onAddToCart: (p: Product, quantity?: number, selectedMaterial?: string, selectedSize?: string, unitPrice?: number, variantId?: string) => void;
   favorites: Product[];
   onToggleFavorite: (p: Product) => void;
   onNavigate: (screen: ActiveScreen) => void;
@@ -21,7 +21,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   onToggleFavorite,
   onNavigate
 }) => {
-  const { formatPrice, t } = useLocalization();
+  const { formatPrice } = useLocalization();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(0);
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
@@ -33,21 +33,38 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   const [includeTable, setIncludeTable] = useState(true);
   const [includeChair, setIncludeChair] = useState(true);
 
-  const materials = product.materialOptions || [
+  const variantMaterials = product.variants?.filter((variant, index, items) =>
+    Boolean(variant.material) && items.findIndex((item) => item.material === variant.material) === index
+  ).map((variant) => ({ name: variant.material!, color: variant.color ?? '#E3DAC9', extraPrice: variant.priceDelta })) ?? [];
+  const materials = product.materialOptions || (variantMaterials.length ? variantMaterials : [
     { name: 'Linho Natural Cru', color: '#E3DAC9', extraPrice: 0 },
     { name: 'Linho Cinza Grafite', color: '#4A4B4D', extraPrice: 3500 },
     { name: 'Bouclé Off-White Nobre', color: '#F5F5F0', extraPrice: 5000 }
-  ];
+  ]);
 
-  const sizes = product.sizeOptions || [
+  const variantSizes = product.variants?.filter((variant, index, items) =>
+    Boolean(variant.size) && items.findIndex((item) => item.size === variant.size) === index
+  ).map((variant) => ({ label: variant.size!, subLabel: variant.name, extraPrice: 0 })) ?? [];
+  const sizes = product.sizeOptions || (variantSizes.length ? variantSizes : [
     { label: '280 cm', subLabel: '3 Módulos • Padrão', extraPrice: 0 },
     { label: '340 cm', subLabel: '4 Módulos c/ Chaise', extraPrice: 12000 },
     { label: 'Personalizado', subLabel: 'Sob medida estúdio', extraPrice: 0, custom: true }
-  ];
+  ]);
+
+  useEffect(() => {
+    setSelectedImageIndex(0);
+    setSelectedMaterialIndex(0);
+    setSelectedSizeIndex(0);
+    setQuantity(1);
+  }, [product.id]);
 
   const currentExtraMaterial = materials[selectedMaterialIndex]?.extraPrice || 0;
   const currentExtraSize = sizes[selectedSizeIndex]?.extraPrice || 0;
   const finalUnitPrice = product.price + currentExtraMaterial + currentExtraSize;
+  const selectedVariant = product.variants?.find((variant) =>
+    (!variant.material || variant.material === materials[selectedMaterialIndex]?.name) &&
+    (!variant.size || variant.size === sizes[selectedSizeIndex]?.label)
+  ) ?? product.variants?.[0];
 
   const isFav = favorites.some((f) => f.id === product.id);
 
@@ -67,7 +84,8 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
       quantity,
       materials[selectedMaterialIndex]?.name,
       sizes[selectedSizeIndex]?.label,
-      finalUnitPrice
+      selectedVariant ? product.price + selectedVariant.priceDelta : finalUnitPrice,
+      selectedVariant?.id
     );
   };
 
@@ -83,7 +101,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
     <div className="w-full bg-[#faf9f7] pt-8 pb-20">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f] mb-6">
+        <nav className="flex items-center gap-2 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f] mb-6 overflow-hidden whitespace-nowrap">
           <button onClick={() => onNavigate('home')} className="hover:text-black transition-colors">
             Início
           </button>
@@ -118,7 +136,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
                     {product.badge}
                   </span>
                 )}
-                <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-semibold tracking-wider border border-[#e9e8e6]">
+                <span className="hidden sm:block px-3 py-1 bg-white/90 backdrop-blur-sm text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-semibold tracking-wider border border-[#e9e8e6]">
                   Foto Oficial de Estúdio
                 </span>
               </div>
@@ -126,7 +144,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
               {/* Botão Ver em 3D / AR */}
               <button
                 onClick={() => setShow3DModal(true)}
-                className="absolute bottom-4 right-4 px-4 py-2 bg-white/95 backdrop-blur-md text-[#1a1c1b] hover:bg-black hover:text-white transition-all font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-wider flex items-center gap-2 shadow-md border border-[#e9e8e6]"
+                className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 px-3 sm:px-4 py-2.5 bg-white/95 backdrop-blur-md text-[#1a1c1b] hover:bg-black hover:text-white transition-all font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-wider flex items-center gap-2 shadow-md border border-[#e9e8e6]"
               >
                 <span className="material-symbols-outlined text-[18px]">view_in_ar</span>
                 <span>Visualizar em 3D / AR</span>
@@ -465,15 +483,17 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
               </div>
               <div className="space-y-2 font-['Plus_Jakarta_Sans'] text-[11px] font-semibold">
                 <button
-                  onClick={() => alert('Download do modelo BIM Revit (.rfa) iniciado.')}
-                  className="w-full py-2 bg-[#efeeec] hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                  disabled
+                  title="Modelo BIM ainda não publicado"
+                  className="w-full py-2 bg-[#efeeec] opacity-50 cursor-not-allowed flex items-center justify-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[16px]">download</span>
                   <span>Bloco Revit (.RFA)</span>
                 </button>
                 <button
-                  onClick={() => alert('Download do arquivo SketchUp (.skp) iniciado.')}
-                  className="w-full py-2 bg-[#efeeec] hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                  disabled
+                  title="Modelo SketchUp ainda não publicado"
+                  className="w-full py-2 bg-[#efeeec] opacity-50 cursor-not-allowed flex items-center justify-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[16px]">download</span>
                   <span>SketchUp (.SKP)</span>
@@ -655,8 +675,8 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
 
       {/* Modal 3D Interativo Simulado */}
       {show3DModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white max-w-2xl w-full p-6 shadow-2xl relative border border-[#e9e8e6]">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white max-w-2xl w-full p-4 sm:p-6 shadow-2xl relative border border-[#e9e8e6] max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain">
             <button
               onClick={() => setShow3DModal(false)}
               className="absolute top-4 right-4 text-black hover:text-[#7d5540]"

@@ -56,7 +56,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ==========================================
           1. HERO SECTION ARQUITETÔNICO (100vh Full Viewport)
           ========================================== */}
-      <section className="relative w-full h-screen min-h-[660px] flex items-end pb-12 sm:pb-16 pt-[116px] overflow-hidden bg-black text-white">
+      <section className="relative w-full min-h-[100svh] sm:min-h-[660px] lg:h-screen flex items-end pb-8 sm:pb-16 pt-[104px] sm:pt-[116px] overflow-hidden bg-black text-white">
         {/* Imagem de Fundo com Scrim Editorial Escuro */}
         <div className="absolute inset-0 z-0">
           <img
@@ -89,10 +89,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </p>
 
               {/* CTAs */}
-              <div className="flex flex-wrap items-center gap-4 mt-7 pt-1">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 mt-7 pt-1 w-full sm:w-auto">
                 <button
                   onClick={() => onNavigate('catalogo')}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-[#faf9f7] text-black font-['Plus_Jakarta_Sans'] text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-[#ffdbca] transition-colors"
+                  className="inline-flex items-center justify-center w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-[#faf9f7] text-black font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-[#ffdbca] transition-colors"
                 >
                   {t('hero.cta_explore', 'Explorar Coleção')}
                 </button>
@@ -100,7 +100,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   onClick={() => {
                     document.getElementById('showroom-interativo')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="inline-flex items-center gap-2 px-7 py-4 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-['Plus_Jakarta_Sans'] text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors"
+                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 sm:px-7 py-3.5 sm:py-4 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px]">view_in_ar</span>
                   {t('hero.cta_virtual', 'Visitar Showroom Virtual')}
@@ -231,7 +231,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 1. Sala de Estar (7 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-7 h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-8 cursor-pointer"
+              className="group relative md:col-span-7 h-[320px] sm:h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Sala de Estar Contemporânea Aethel"
@@ -255,7 +255,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 2. Sala de Jantar (5 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-5 h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-8 cursor-pointer"
+              className="group relative md:col-span-5 h-[320px] sm:h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Sala de Jantar & Banquete"
@@ -279,7 +279,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 3. Quarto & Suíte (4 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-4 h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-8 cursor-pointer"
+              className="group relative md:col-span-4 h-[300px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Quarto & Suíte Master"
@@ -300,7 +300,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 4. Escritório Executivo (4 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-4 h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-8 cursor-pointer"
+              className="group relative md:col-span-4 h-[300px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Escritório Executivo"
@@ -322,7 +322,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:col-span-4 gap-6">
               <div
                 onClick={() => onNavigate('catalogo')}
-                className="group relative h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-6 cursor-pointer"
+                className="group relative h-[280px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-6 cursor-pointer"
               >
                 <img
                   alt="Cozinha & Gourmet Integrada"
@@ -342,7 +342,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
               <div
                 onClick={() => onNavigate('catalogo')}
-                className="group relative h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-6 cursor-pointer"
+                className="group relative h-[280px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-6 cursor-pointer"
               >
                 <img
                   alt="Área Externa & Varanda"
@@ -393,7 +393,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
 
           {/* Canvas do Showroom Interativo com Hotspots Reais */}
-          <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[21/10] bg-[#efeeec] overflow-hidden shadow-2xl">
+          <div className="relative w-full h-[620px] sm:h-auto sm:aspect-[16/9] lg:aspect-[21/10] bg-[#efeeec] overflow-hidden shadow-2xl">
             {/* Foto Base do Ambiente em Alta Resolução */}
             <img
               alt="Living Contemporâneo Nuvola - Showroom Aethel"
@@ -420,7 +420,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
               {/* Popover Card */}
               {activeHotspot === 1 && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 sm:w-80 bg-white p-4 shadow-[0_24px_48px_-12px_rgba(23,22,21,0.22)] z-40 border border-[#e3e2e0]">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-[calc(100vw-3rem)] max-w-72 sm:w-80 sm:max-w-none bg-white p-3 sm:p-4 shadow-[0_24px_48px_-12px_rgba(23,22,21,0.22)] z-40 border border-[#e3e2e0]">
                   <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#efeeec] mb-3">
                     <img
                       alt="Sofá Modular Nuvola"
@@ -617,7 +617,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
 
           {/* Grid 8 Categorias */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               { title: 'Sofás & Chaise', icon: 'weekend', count: '14 Modelos' },
               { title: 'Mesas de Jantar & Centro', icon: 'table_restaurant', count: '22 Modelos' },
@@ -631,7 +631,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={cat.title}
                 onClick={() => onNavigate('catalogo')}
-                className="group flex flex-col items-center text-center p-6 bg-[#f4f3f1] hover:bg-[#efeeec] transition-colors cursor-pointer border border-[#e9e8e6]"
+                className="group flex flex-col items-center text-center p-4 sm:p-6 bg-[#f4f3f1] hover:bg-[#efeeec] transition-colors cursor-pointer border border-[#e9e8e6]"
               >
                 <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-[#1a1c1b] group-hover:text-[#7d5540] group-hover:scale-110 transition-all mb-3 shadow-xs">
                   <span className="material-symbols-outlined text-[32px]">{cat.icon}</span>
@@ -722,7 +722,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         e.stopPropagation();
                         onAddToCart(p);
                       }}
-                      className="absolute bottom-0 inset-x-0 py-3 bg-black text-white font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 hover:bg-[#7d5540]"
+                      className="absolute bottom-0 inset-x-0 py-3 bg-black text-white font-['Plus_Jakarta_Sans'] text-[11px] font-bold uppercase tracking-wider opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 hover:bg-[#7d5540]"
                     >
                       <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
                       {t('btn.quick_add', 'Quick Add')} • {formatPrice(p.price)}
@@ -818,16 +818,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 pt-1">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-1 w-full">
                 <button
                   onClick={() => onNavigate('showrooms')}
-                  className="px-8 py-4 bg-[#7d5540] text-white font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-[0.14em] font-semibold hover:bg-[#fec9ae] hover:text-[#79523e] transition-colors"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-[#7d5540] text-white font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] uppercase tracking-[0.14em] font-semibold hover:bg-[#fec9ae] hover:text-[#79523e] transition-colors"
                 >
                   Solicitar Orçamento B2B
                 </button>
                 <button
                   onClick={() => onNavigate('showrooms')}
-                  className="px-7 py-4 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-[0.14em] font-semibold transition-colors"
+                  className="w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] uppercase tracking-[0.14em] font-semibold transition-colors"
                 >
                   Agendar Visita ao Showroom
                 </button>

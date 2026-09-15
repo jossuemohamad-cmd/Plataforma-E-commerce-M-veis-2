@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShowroomLocation, ActiveScreen } from '../types';
 import { SHOWROOMS } from '../data/aethelData';
+import { createQuoteRequest, listShowrooms } from '../services/catalogService';
 
 interface ShowroomsScreenProps {
   onNavigate: (screen: ActiveScreen) => void;
@@ -8,16 +9,35 @@ interface ShowroomsScreenProps {
 
 export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) => {
   const [selectedShowroom, setSelectedShowroom] = useState<ShowroomLocation>(SHOWROOMS[0]);
+  const [showrooms, setShowrooms] = useState<ShowroomLocation[]>(SHOWROOMS);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [date, setDate] = useState('2025-03-05');
   const [purpose, setPurpose] = useState('especificacao');
   const [booked, setBooked] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleBooking = (e: React.FormEvent) => {
+  useEffect(() => {
+    void listShowrooms().then((items) => {
+      setShowrooms(items);
+      if (items[0]) setSelectedShowroom(items[0]);
+    }).catch((error) => setBookingError(error instanceof Error ? error.message : 'Falha ao carregar showrooms.'));
+  }, []);
+
+  const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    setBooked(true);
+    setSubmitting(true);
+    setBookingError(null);
+    try {
+      await createQuoteRequest({ showroomId: selectedShowroom.id, name, email, phone, desiredDate: date, purpose });
+      setBooked(true);
+    } catch (error) {
+      setBookingError(error instanceof Error ? error.message : 'Não foi possível agendar a visita.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -47,7 +67,7 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
 
         {/* 3 Grandes Galerias */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          {SHOWROOMS.map((s) => (
+          {showrooms.map((s) => (
             <div
               key={s.id}
               className="bg-white border border-[#e9e8e6] shadow-xs flex flex-col justify-between overflow-hidden group hover:shadow-md transition-shadow"
@@ -242,11 +262,13 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
               </div>
 
               <div className="sm:col-span-2 lg:col-span-3 pt-2">
+                {bookingError && <p role="alert" className="mb-3 border border-red-200 bg-red-50 p-3 text-xs text-red-800">{bookingError}</p>}
                 <button
                   type="submit"
+                  disabled={submitting}
                   className="w-full sm:w-auto px-8 py-3.5 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-wider transition-colors shadow-sm"
                 >
-                  Confirmar Agendamento com o Concierge
+                  {submitting ? 'A confirmar…' : 'Confirmar Agendamento com o Concierge'}
                 </button>
               </div>
             </form>

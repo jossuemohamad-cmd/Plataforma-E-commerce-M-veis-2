@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { CartItem } from '../types';
+import { CartItem, Product } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
 
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   cartItems: CartItem[];
-  onUpdateQuantity: (productId: string, quantity: number) => void;
-  onRemoveItem: (productId: string) => void;
+  onUpdateQuantity: (itemIndex: number, quantity: number) => void;
+  onRemoveItem: (itemIndex: number) => void;
   onProceedToCheckout: () => void;
-  onViewProduct: (product: any) => void;
+  onViewProduct: (product: Product) => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -21,7 +21,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onProceedToCheckout,
   onViewProduct
 }) => {
-  const { formatPrice, t } = useLocalization();
+  const { formatPrice } = useLocalization();
   const [coupon, setCoupon] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [couponMessage, setCouponMessage] = useState('');
@@ -29,7 +29,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   if (!isOpen) return null;
 
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + (item.unitPrice || item.product.price) * item.quantity,
+    (sum, item) => sum + (item.unitPrice ?? item.product.price) * item.quantity,
     0
   );
 
@@ -57,7 +57,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col border-l border-[#e9e8e6]">
           {/* Header do Drawer */}
           <div className="p-6 border-b border-[#e9e8e6] flex items-center justify-between bg-[#faf9f7]">
@@ -78,7 +78,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </div>
 
           {/* Lista de Peças */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 overscroll-contain">
             {cartItems.length === 0 ? (
               <div className="text-center py-20 space-y-3">
                 <span className="material-symbols-outlined text-4xl text-[#7c766f]">
@@ -93,11 +93,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
             ) : (
               cartItems.map((item, idx) => {
-                const itemPrice = item.unitPrice || item.product.price;
+                const itemPrice = item.unitPrice ?? item.product.price;
                 return (
                   <div
-                    key={idx}
-                    className="flex gap-4 p-3.5 border border-[#e9e8e6] bg-[#faf9f7] hover:border-black transition-colors"
+                    key={`${item.product.id}-${item.selectedMaterial ?? ''}-${item.selectedSize ?? ''}`}
+                    className="flex gap-3 sm:gap-4 p-3 sm:p-3.5 border border-[#e9e8e6] bg-[#faf9f7] hover:border-black transition-colors"
                   >
                     <div
                       onClick={() => {
@@ -126,7 +126,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             {item.product.title}
                           </h4>
                           <button
-                            onClick={() => onRemoveItem(item.product.id)}
+                            onClick={() => onRemoveItem(idx)}
                             className="text-[#7c766f] hover:text-[#ba1a1a]"
                             title="Remover"
                           >
@@ -154,7 +154,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {/* Controles de Quantidade */}
                         <div className="inline-flex items-center border border-[#cdc5bd] bg-white h-7">
                           <button
-                            onClick={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
+                            onClick={() => onUpdateQuantity(idx, item.quantity - 1)}
                             className="w-6 h-full text-xs text-[#1a1c1b] hover:bg-[#efeeec] flex items-center justify-center font-bold"
                           >
                             -
@@ -163,7 +163,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
+                            onClick={() => onUpdateQuantity(idx, item.quantity + 1)}
                             className="w-6 h-full text-xs text-[#1a1c1b] hover:bg-[#efeeec] flex items-center justify-center font-bold"
                           >
                             +
@@ -183,7 +183,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
           {/* Rodapé do Caderno */}
           {cartItems.length > 0 && (
-            <div className="p-6 border-t border-[#e9e8e6] bg-[#faf9f7] space-y-4">
+            <div className="p-4 sm:p-6 border-t border-[#e9e8e6] bg-[#faf9f7] space-y-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
               {/* Cupom */}
               <form onSubmit={handleApplyCoupon} className="flex gap-2">
                 <input

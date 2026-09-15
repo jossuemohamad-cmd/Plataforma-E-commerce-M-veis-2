@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Product, ActiveScreen } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
+import { uploadProductImage } from '../services/adminService';
 
 interface ManagementScreenProps {
   products: Product[];
-  onAddProduct: (product: Product) => void;
-  onUpdateProduct: (product: Product) => void;
-  onDeleteProduct: (productId: string) => void;
+  onAddProduct: (product: Product) => Promise<void>;
+  onUpdateProduct: (product: Product) => Promise<void>;
+  onDeleteProduct: (productId: string) => Promise<void>;
   onNavigate: (screen: ActiveScreen) => void;
 }
 
@@ -17,11 +18,10 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
   onDeleteProduct,
   onNavigate
 }) => {
-  const { formatPrice, t } = useLocalization();
+  const { formatPrice } = useLocalization();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Todas');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   // New product form state
   const [newTitle, setNewTitle] = useState('');
@@ -29,10 +29,13 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
   const [newPrice, setNewPrice] = useState<number>(45000);
   const [newMaterial, setNewMaterial] = useState('Carvalho Maciço e Linho');
   const [newDimensions, setNewDimensions] = useState('220 x 95 x 80 cm');
-  const [newAmbiente, setNewAmbiente] = useState('Sala de Estar');
+  const newAmbiente = 'Sala de Estar';
   const [newImage, setNewImage] = useState('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80');
+  const [newImageFile, setNewImageFile] = useState<File | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  const formatDimensions = (dimensions: any) => {
+  const formatDimensions = (dimensions: Product['dimensions']) => {
     if (!dimensions) return '—';
     if (typeof dimensions === 'string') return dimensions;
     if (typeof dimensions === 'object') {
@@ -56,10 +59,11 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
     return true;
   });
 
-  const handleSaveNew = (e: React.FormEvent) => {
+  const handleSaveNew = async (e: React.FormEvent) => {
     e.preventDefault();
+    const productId = 'prod-' + Date.now();
     const product: Product = {
-      id: 'prod-' + Date.now(),
+      id: productId,
       title: newTitle,
       category: newCategory,
       price: Number(newPrice),
@@ -74,11 +78,25 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
       reviewCount: 1,
       badge: 'Novo Lote'
     };
-    onAddProduct(product);
-    setShowAddModal(false);
-    // Reset form
-    setNewTitle('');
-    setNewPrice(45000);
+    setSaving(true);
+    setSaveError(null);
+    try {
+      if (newImageFile) {
+        if (!newImageFile.type.startsWith('image/') || newImageFile.size > 5 * 1024 * 1024) {
+          throw new Error('A imagem deve ser JPG, PNG ou WebP e ter no máximo 5 MB.');
+        }
+        product.images = [await uploadProductImage(newImageFile, productId)];
+      }
+      await onAddProduct(product);
+      setShowAddModal(false);
+      setNewTitle('');
+      setNewPrice(45000);
+      setNewImageFile(null);
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : 'Não foi possível guardar a peça.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -107,10 +125,10 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <button
               onClick={() => onNavigate('dashboard')}
-              className="px-5 py-2.5 bg-[#efeeec] hover:bg-[#e9e8e6] text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-1.5"
+              className="w-full sm:w-auto justify-center px-5 py-2.5 bg-[#efeeec] hover:bg-[#e9e8e6] text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-1.5"
             >
               <span className="material-symbols-outlined text-[16px]">monitoring</span>
               <span>Painel Executivo</span>
@@ -118,7 +136,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-5 py-2.5 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
+              className="w-full sm:w-auto justify-center px-5 py-2.5 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
             >
               <span className="material-symbols-outlined text-[16px]">add</span>
               <span>+ Nova Peça Autoral</span>
@@ -127,7 +145,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
         </div>
 
         {/* 4 Métricas de Estoque e Operação */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="p-5 bg-white border border-[#e9e8e6] shadow-xs">
             <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-wider text-[#7c766f]">
               Obras no Acervo Ativo
@@ -197,7 +215,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col min-[420px]:flex-row min-[420px]:items-center gap-2 min-[420px]:gap-3">
             <span className="font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">Filtrar Categoria:</span>
             <select
               value={categoryFilter}
@@ -216,7 +234,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
 
         {/* Tabela de Produtos */}
         <div className="bg-white border border-[#e9e8e6] shadow-xs overflow-x-auto">
-          <table className="w-full text-left font-['Plus_Jakarta_Sans'] text-xs">
+          <table className="w-full min-w-[960px] text-left font-['Plus_Jakarta_Sans'] text-xs">
             <thead>
               <tr className="bg-[#faf9f7] border-b border-[#e9e8e6] text-[#7c766f] uppercase font-bold text-[10px] tracking-wider">
                 <th className="py-3 px-4">Peça & SKU</th>
@@ -277,17 +295,10 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        onClick={() => alert(`Visualizando ficha técnica completa de: ${p.title}`)}
-                        className="p-1 text-[#7c766f] hover:text-black"
-                        title="Ver Ficha Técnica"
-                      >
-                        <span className="material-symbols-outlined text-[18px]">visibility</span>
-                      </button>
-                      <button
                         onClick={() => {
                           const newP = prompt('Novo valor para esta peça (em MT):', String(p.price));
                           if (newP && !isNaN(Number(newP))) {
-                            onUpdateProduct({ ...p, price: Number(newP) });
+                            void onUpdateProduct({ ...p, price: Number(newP) }).catch((error) => setSaveError(error instanceof Error ? error.message : 'Falha ao atualizar.'));
                           }
                         }}
                         className="p-1 text-[#7c766f] hover:text-black"
@@ -298,7 +309,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                       <button
                         onClick={() => {
                           if (confirm(`Tem certeza que deseja remover ${p.title} do acervo?`)) {
-                            onDeleteProduct(p.id);
+                            void onDeleteProduct(p.id).catch((error) => setSaveError(error instanceof Error ? error.message : 'Falha ao remover.'));
                           }
                         }}
                         className="p-1 text-[#7c766f] hover:text-[#ba1a1a]"
@@ -317,8 +328,8 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
 
       {/* Modal Adicionar Nova Peça */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white max-w-xl w-full p-6 sm:p-8 border border-[#e9e8e6] shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white max-w-xl w-full p-4 sm:p-8 border border-[#e9e8e6] shadow-2xl relative max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain">
             <button
               onClick={() => setShowAddModal(false)}
               className="absolute top-4 right-4 text-black hover:text-[#7d5540]"
@@ -345,6 +356,12 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="Ex: Poltrona Savana em Couro Natural"
                   className="w-full bg-[#f4f3f1] px-3.5 py-2.5 text-[#1a1c1b] border border-[#cdc5bd] focus:bg-white focus:outline-none"
+                />
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) => setNewImageFile(event.target.files?.[0] ?? null)}
+                  className="mt-2 block w-full text-[11px] text-[#7c766f] file:mr-3 file:border-0 file:bg-[#efeeec] file:px-3 file:py-2 file:text-[10px] file:font-semibold file:uppercase"
                 />
               </div>
 
@@ -424,6 +441,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-[#e9e8e6]">
+                {saveError && <p role="alert" className="mr-auto text-xs text-red-700">{saveError}</p>}
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
@@ -433,9 +451,10 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                 </button>
                 <button
                   type="submit"
+                  disabled={saving}
                   className="px-6 py-2.5 bg-black text-white hover:bg-[#7d5540] text-[11px] uppercase font-semibold tracking-wider transition-colors"
                 >
-                  Salvar no Acervo
+                  {saving ? 'A guardar…' : 'Salvar no Acervo'}
                 </button>
               </div>
             </form>
