@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-headline: "Playfair Display", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-surface: #faf9f7;
+  --color-surface-dim: #dadad8;
+  --color-surface-bright: #faf9f7;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f1;
+  --color-surface-container: #efeeec;
+  --color-surface-container-high: #e9e8e6;
+  --color-surface-container-highest: #e3e2e0;
+  --color-on-surface: #1a1c1b;
+  --color-on-surface-variant: #4a4640;
+  --color-inverse-surface: #2f3130;
+  --color-inverse-on-surface: #f1f1ef;
+  --color-outline: #7c766f;
+  --color-outline-variant: #cdc5bd;
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1c1b1a;
+  --color-on-primary-container: #868381;
+  --color-secondary: #7d5540;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #fec9ae;
+  --color-on-secondary-container: #79523e;
+  --color-secondary-fixed: #ffdbca;
+  --color-secondary-fixed-dim: #efbca1;
+  --color-on-secondary-fixed: #2f1405;
+  --color-background: #faf9f7;
+  --color-on-background: #1a1c1b;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: #1a1c1b;
+    background-color: #faf9f7;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+

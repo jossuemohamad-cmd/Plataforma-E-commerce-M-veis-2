@@ -1,0 +1,6 @@
+{
+  "name": "Aethel Studio • Mobiliário Autoral",
+  "description": "Plataforma de arquitetura viva e mobiliário autoral de luxo com catálogo 2025, showroom virtual 3D, personalização em tempo real e entrega Luva Branca em Moçambique.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
