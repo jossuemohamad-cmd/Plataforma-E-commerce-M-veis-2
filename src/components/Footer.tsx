@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ActiveScreen } from '../types';
 import { subscribeNewsletter } from '../services/catalogService';
+import edenLogo from '../assets/images/eden-logo-official.png';
 
 interface FooterProps {
   onNavigate: (screen: ActiveScreen) => void;
@@ -25,19 +26,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="w-full bg-[#f4f3f1] text-[#1a1c1b] border-t border-[#e3e2e0]">
+    <footer className="eden-footer w-full bg-[#132240] text-white border-t-4 border-[#FDCB00]">
       {/* Gazette Subscription Banner */}
       <div className="bg-[#e9e8e6]/70 border-b border-[#e3e2e0]">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-10 lg:py-12 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <span className="font-['Plus_Jakarta_Sans'] text-[11px] font-semibold uppercase text-[#7d5540] tracking-[0.14em] block mb-1.5">
-              Aethel Gazette de Design
+              Novidades Eden
             </span>
             <h3 className="font-['Playfair_Display'] text-xl sm:text-2xl lg:text-[28px] text-[#1a1c1b] font-normal tracking-tight">
-              Receba a nossa Gazette de Design e Lançamentos Exclusivos
+              Novidades, inspirações e promoções Eden
             </h3>
             <p className="font-['Plus_Jakarta_Sans'] text-xs sm:text-sm text-[#4a4640] mt-1">
-              Ensaios curatoriais, prévias de coleções limitadas e cadernos de arquitetura residencial.
+              Fique por dentro das novidades da marca e conheça as nossas soluções para um sono saudável.
             </p>
           </div>
 
@@ -66,17 +67,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Brand Manifesto */}
           <div className="space-y-4">
-            <div className="font-['Playfair_Display'] text-2xl font-normal text-[#1a1c1b]">
-              Eden
-            </div>
+            <img src={edenLogo} alt="Eden — Colchões e Mobília" className="h-16 w-auto max-w-[165px] object-contain object-left" />
             <p className="font-['Plus_Jakarta_Sans'] text-xs sm:text-sm text-[#4a4640] leading-relaxed">
-              Manifesto de marcenaria autoral, tapeçaria nobre e pedras raras. O mobiliário tratado como escultura habitável e legado temporal para a arquitetura contemporânea africana e internacional.
+              Mais do que uma marca, a escolha para um sono saudável. Personalizamos produtos para responder às necessidades de cada cliente.
             </p>
-            <div className="flex items-center gap-4 text-[#4a4640] pt-1">
-              <span className="material-symbols-outlined text-[20px] hover:text-[#1a1c1b] cursor-pointer" title="Arquitetura">apartment</span>
-              <span className="material-symbols-outlined text-[20px] hover:text-[#1a1c1b] cursor-pointer" title="Projetos">architecture</span>
-              <span className="material-symbols-outlined text-[20px] hover:text-[#1a1c1b] cursor-pointer" title="Marcenaria">chair</span>
-            </div>
+            <a href="https://esm.co.mz/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs font-semibold text-[#102752] hover:underline">
+              Site oficial ESM
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_new</span>
+            </a>
           </div>
 
           {/* Navegação de Ambientes */}
@@ -176,7 +174,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   onClick={() => onNavigate('showrooms')}
                   className="hover:text-[#1a1c1b] transition-colors py-0.5 text-left"
                 >
-                  Consultoria de Interiores Dedicada
+                  Colchões e mobiliário
                 </button>
               </li>
               <li>
@@ -184,7 +182,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   onClick={() => onNavigate('showrooms')}
                   className="hover:text-[#1a1c1b] transition-colors py-0.5 text-left"
                 >
-                  Catálogo Corporativo & Hospitalidade
+                  Personalização de produtos
                 </button>
               </li>
               <li>
@@ -192,7 +190,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   onClick={() => onNavigate('checkout')}
                   className="hover:text-[#1a1c1b] transition-colors py-0.5 text-left"
                 >
-                  Entrega e Montagem de Luva Branca
+                  Vendas a retalho
                 </button>
               </li>
               <li>
@@ -200,7 +198,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   onClick={() => onNavigate('minha-conta')}
                   className="hover:text-[#1a1c1b] transition-colors py-0.5 text-left"
                 >
-                  Certificado de Origem & Garantia 36 Meses
+                  Vendas a grosso
                 </button>
               </li>
               <li>
@@ -208,7 +206,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   onClick={() => onNavigate('showrooms')}
                   className="hover:text-[#1a1c1b] transition-colors py-0.5 text-left"
                 >
-                  Caixa de Amostras de Madeiras e Tecidos
+                  Esponjas para usos diversos
                 </button>
               </li>
             </ul>
@@ -220,20 +218,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Atendimento & Contacto
             </h4>
             <div className="space-y-2 font-['Plus_Jakarta_Sans'] text-xs text-[#4a4640]">
-              <p className="text-[#1a1c1b] font-medium">Pavilhão Eden Maputo</p>
-              <p>Av. Julius Nyerere, Polana Cimento • Moçambique</p>
-              <p className="text-[11px] text-[#7c766f]">
-                Terça a Sábado: 09h00 às 19h00 (Atendimento sob agendamento)
-              </p>
+              <p className="text-[#1a1c1b] font-medium">Espuma de Moçambique, Lda.</p>
+              <p>Av. Samora Machel, Bairro Tchumene, Matola</p>
               <div className="pt-2 space-y-1">
                 <p className="text-[#1a1c1b]">
-                  <span className="text-[10px] text-[#7c766f] uppercase block font-semibold">Linha Direta Concierge:</span>
-                  <a href="tel:+258840009200" className="hover:underline font-mono">+258 84 000 9200</a>
+                  <span className="text-[10px] text-[#7c766f] uppercase block font-semibold">Vendas a retalho:</span>
+                  <a href="tel:+258870003388" className="hover:underline font-mono">+258 87 000 3388</a>
+                  <span className="mx-1 text-[#cdc5bd]">•</span>
+                  <a href="mailto:esales@esm.co.mz" className="hover:underline">esales@esm.co.mz</a>
                 </p>
                 <p className="text-[#1a1c1b]">
-                  <span className="text-[10px] text-[#7c766f] uppercase block font-semibold">Assessoria de Projetos:</span>
-                  <a href="mailto:concierge@aethelstudio.com" className="hover:underline">esm@esme.co.mz</a>
+                  <span className="text-[10px] text-[#7c766f] uppercase block font-semibold">Vendas a grosso:</span>
+                  <a href="tel:+258841110444" className="hover:underline font-mono">+258 84 111 0444</a>
+                  <span className="mx-1 text-[#cdc5bd]">•</span>
+                  <a href="mailto:customers@esm.co.mz" className="hover:underline">customers@esm.co.mz</a>
                 </p>
+                <p className="pt-1 text-[11px] text-[#7c766f]">Facebook • Instagram • LinkedIn • YouTube • WhatsApp</p>
               </div>
             </div>
           </div>
@@ -242,7 +242,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Bottom Legal bar */}
         <div className="mt-12 pt-6 border-t border-[#e3e2e0] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">
           <div className="flex flex-wrap items-center gap-3">
-            <span>© 2025 Eden. Todos os direitos reservados.</span>
+            <span>© {new Date().getFullYear()} Eden. Todos os direitos reservados.</span>
             <span className="hidden md:inline text-[#cdc5bd]">•</span>
             <span className="hover:text-[#1a1c1b] cursor-pointer">Privacidade & Termos</span>
             <span className="hidden md:inline text-[#cdc5bd]">•</span>
@@ -252,9 +252,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[#7c766f] font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-semibold">
-            <span>Autenticidade Certificada</span>
+            <span>Marca registada da Espuma de Moçambique</span>
             <span>•</span>
-            <span>Design Escultural</span>
+            <span>NUIT 400309809</span>
           </div>
         </div>
       </div>

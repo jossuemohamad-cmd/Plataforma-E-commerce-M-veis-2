@@ -1,5 +1,8 @@
 export type ActiveScreen = 
   | 'home'
+  | 'sobre'
+  | 'colecoes'
+  | 'contacto'
   | 'catalogo'
   | 'produto'
   | 'produto-nuvola'

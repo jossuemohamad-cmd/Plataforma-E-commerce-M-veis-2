@@ -13,7 +13,7 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [date, setDate] = useState('2025-03-05');
+  const [date, setDate] = useState('');
   const [purpose, setPurpose] = useState('especificacao');
   const [booked, setBooked] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
     void listShowrooms().then((items) => {
       setShowrooms(items);
       if (items[0]) setSelectedShowroom(items[0]);
-    }).catch((error) => setBookingError(error instanceof Error ? error.message : 'Falha ao carregar showrooms.'));
+    }).catch((error) => setBookingError(error instanceof Error ? error.message : 'Falha ao carregar sucursais.'));
   }, []);
 
   const handleBooking = async (e: React.FormEvent) => {
@@ -49,19 +49,19 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
             Início
           </button>
           <span>/</span>
-          <span className="text-[#1a1c1b] font-medium">Espaços Físicos & Visitas</span>
+          <span className="text-[#1a1c1b] font-medium">Sucursais</span>
         </nav>
 
         {/* Header */}
         <div className="mb-12 pb-8 border-b border-[#e9e8e6]">
           <span className="font-['Plus_Jakarta_Sans'] text-[11px] font-semibold uppercase text-[#7d5540] tracking-[0.16em] block mb-1">
-            Galerias & Ateliês
+            Rede Eden em Moçambique
           </span>
           <h1 className="font-['Playfair_Display'] text-3xl sm:text-4xl lg:text-5xl text-[#1a1c1b] font-normal tracking-tight">
-            Espaços Físicos & Agendamento Privado
+            Sucursais e unidades Eden
           </h1>
           <p className="font-['Plus_Jakarta_Sans'] text-sm sm:text-base text-[#4a4640] mt-2 max-w-3xl leading-relaxed">
-            Vivencie a materialidade das nossas madeiras maciças, mármores naturais e tecidos de alta costura nas nossas galerias em Maputo, Vilankulo e Ponta do Ouro.
+            Encontre as unidades oficiais publicadas pela Espuma de Moçambique em Matola, Beira e Nampula. Confirme sempre o horário antes da visita.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-[#f4f3f1] font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f]">
-                    <span className="font-semibold text-[#1a1c1b] block mb-1">Destaques da Galeria:</span>
+                    <span className="font-semibold text-[#1a1c1b] block mb-1">Informação da unidade:</span>
                     <p className="leading-relaxed">{s.description}</p>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
                   }}
                   className="w-full py-3 bg-[#f4f3f1] hover:bg-black hover:text-white text-[#1a1c1b] font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-wider transition-colors text-center"
                 >
-                  Agendar Visita com Curador
+                  Solicitar contacto
                 </button>
               </div>
             </div>
@@ -242,6 +242,7 @@ export const ShowroomsScreen: React.FC<ShowroomsScreenProps> = ({ onNavigate }) 
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 10)}
                   className="w-full bg-white px-3.5 py-2.5 text-[#1a1c1b] border border-[#cdc5bd] focus:border-black focus:outline-none cursor-pointer"
                 />
               </div>

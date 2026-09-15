@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { ActiveScreen } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useLocalization } from '../context/LocalizationContext';
+import edenLogo from '../assets/images/eden-logo-official.png';
 
 interface AuthScreenProps {
   onNavigate: (screen: ActiveScreen) => void;
 }
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
-  const { login, register, resetPassword, isAdmin, configured } = useAuth();
+  const { login, register, resetPassword, logout, configured } = useAuth();
   const { t } = useLocalization();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -31,8 +32,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
     setAuthFeedback(null);
     try {
       const account = await login(email, password);
+      if (account.role === 'admin') {
+        await logout();
+        throw new Error('Contas administrativas devem entrar exclusivamente pelo portal de administração.');
+      }
       setAuthFeedback('Sessão iniciada com segurança.');
-      onNavigate(account.role === 'admin' ? 'gestao' : 'minha-conta');
+      onNavigate('minha-conta');
     } catch (error) {
       setAuthFeedback(error instanceof Error ? error.message : 'Não foi possível iniciar sessão.');
     } finally {
@@ -81,88 +86,83 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-160px)] bg-[#faf9f7] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-10">
-      <div className="max-w-5xl w-full bg-white border border-[#e9e8e6] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+    <div className="w-full min-h-[calc(100dvh-96px)] sm:min-h-[calc(100dvh-116px)] lg:h-[calc(100dvh-116px)] bg-white flex items-stretch justify-center overflow-x-hidden lg:overflow-hidden">
+      <div className="eden-card max-w-[1600px] mx-4 sm:mx-6 lg:mx-10 my-3 sm:my-5 w-full bg-white border border-[#dedede] shadow-[0_24px_80px_rgba(19,34,64,0.12)] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
         {/* ==========================================
             COLUNA ESQUERDA: EDITORIAL ARQUITETÔNICO
             ========================================== */}
-        <div className="relative lg:col-span-5 bg-[#1c1b1a] text-white p-5 sm:p-10 flex flex-col justify-between overflow-hidden">
+        <div className="eden-dark-surface relative hidden lg:flex lg:col-span-5 bg-[#132240] text-white p-8 xl:p-10 flex-col justify-between overflow-hidden">
           {/* Foto de fundo com scrim suave */}
           <div className="absolute inset-0 z-0">
             <img
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhLlqgo3Z6Tpg1ioE_TBD6ATVxCZkqubNx0nSPWoyJRF_3EyeddV_CnxHgXUhux-YLBpCE9ZO9JuOYquZRmcfoWZCPInA9mta6uh2uiFFI3iUqe5WFqyvGG0Z8dXVwQ6EK0hsBdEyZcOaO1lvxDKSlINCRVSS8GG6Npoe-AUmUOAKdNuhAScY1OVy4y7WHmQG8jnA35FAiG6EFB2YbBGSLTgNMzvwZ7FDmYH4wI68d6GCxVv3SH-sdcA"
-              alt="Atelier Aethel"
+              alt="Quarto Eden"
               className="w-full h-full object-cover opacity-30"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1c1b1a] via-[#1c1b1a]/80 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#132240] via-[#132240]/80 to-transparent"></div>
           </div>
 
           {/* Top Monogram */}
           <div className="relative z-10">
-            <span className="font-['Playfair_Display'] font-black text-3xl tracking-tight text-white block">
-              A
-            </span>
-            <span className="font-['Plus_Jakarta_Sans'] text-[9px] uppercase tracking-[0.3em] text-[#efbca1] font-semibold">
-              AETHEL CONCIERGE & GESTÃO
+            <div className="inline-flex rounded-[10px] bg-white p-2.5 shadow-lg">
+              <img src={edenLogo} alt="Eden — Colchões e Mobília" className="h-12 w-auto object-contain" />
+            </div>
+            <span className="font-['Plus_Jakarta_Sans'] text-[9px] uppercase tracking-[0.3em] text-white font-semibold">
+              CONTA DE CLIENTE
             </span>
           </div>
 
           {/* Conteúdo Central */}
           <div className="relative z-10 my-8 space-y-6">
-            <h2 className="font-['Playfair_Display'] text-2xl sm:text-3xl text-white font-normal leading-snug">
-              O Mobiliário Autoral como Extensão da sua Visão Arquitetônica
+            <h2 className="font-['Playfair_Display'] text-2xl sm:text-3xl text-white font-bold leading-snug">
+              A sua conta Eden, simples e segura
             </h2>
 
             <div className="space-y-4 font-['Plus_Jakarta_Sans'] text-xs text-[#cac6c4]">
               <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-[#efbca1] text-[18px] shrink-0 mt-0.5">
-                  admin_panel_settings
+                <span className="material-symbols-outlined text-[#FDCB00] text-[18px] shrink-0 mt-0.5">
+                  shopping_bag
                 </span>
-                <p>Credenciais de Administrador com controle total de acervo e pedidos.</p>
+                <p>Consulte pedidos, favoritos e dados de entrega num só lugar.</p>
               </div>
 
               <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-[#efbca1] text-[18px] shrink-0 mt-0.5">
+                <span className="material-symbols-outlined text-[#FDCB00] text-[18px] shrink-0 mt-0.5">
                   timeline
                 </span>
-                <p>Caderno de Obras & Rastreamento da linha de fabrico em tempo real.</p>
+                <p>Acompanhe encomendas e mantenha o carrinho sincronizado.</p>
               </div>
 
               <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-[#efbca1] text-[18px] shrink-0 mt-0.5">
+                <span className="material-symbols-outlined text-[#FDCB00] text-[18px] shrink-0 mt-0.5">
                   deployed_code
                 </span>
-                <p>Acesso exclusivo a bibliotecas de blocos 3D BIM, Revit e SketchUp.</p>
+                <p>Conta residencial ou profissional para arquitectos e empresas.</p>
               </div>
             </div>
           </div>
 
           {/* Quote Inferior */}
           <div className="relative z-10 pt-4 border-t border-white/10 font-['Playfair_Display'] italic text-xs text-[#cdc5bd]">
-            “O luxo contemporâneo não grita; ele habita a matéria e acolhe o silêncio.”
+            “Mais do que uma marca, a escolha para um sono saudável.”
           </div>
         </div>
 
         {/* ==========================================
             COLUNA DIREITA: FORMULÁRIO DE ACESSO VIP
             ========================================== */}
-        <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center">
+        <div className="scrollbar-hidden lg:col-span-7 p-5 sm:p-8 xl:p-10 flex flex-col justify-center overflow-y-auto overscroll-contain">
           <div>
             <div className="flex items-center justify-between mb-1">
               <span className="font-['Plus_Jakarta_Sans'] text-[11px] font-semibold uppercase text-[#7d5540] tracking-[0.16em]">
-                Portal do Concierge & Painel
+                Área reservada ao cliente
               </span>
-              {isAdmin && (
-                <span className="text-[10px] font-mono font-bold bg-black text-[#fec9ae] px-2 py-0.5 uppercase">
-                  Sessão Admin Ativa
-                </span>
-              )}
             </div>
-            <h3 className="font-['Playfair_Display'] text-2xl sm:text-3xl text-[#1a1c1b] font-normal">
-              Credenciação Segura
+            <h3 className="font-['Playfair_Display'] text-2xl sm:text-3xl text-[#1a1c1b] font-bold">
+              Entre na sua conta Eden
             </h3>
             <p className="font-['Plus_Jakarta_Sans'] text-xs sm:text-sm text-[#7c766f] mt-1">
-              Acesse a sua conta de administrador, gabinete de arquitetura ou crie seu cadastro.
+              Inicie sessão ou crie uma conta para comprar e acompanhar as suas encomendas.
             </p>
           </div>
 
@@ -206,14 +206,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
             <form onSubmit={handleLoginSubmit} className="space-y-4 font-['Plus_Jakarta_Sans'] text-xs">
               <div>
                 <label className="block text-[#7c766f] uppercase tracking-wider font-semibold text-[10px] mb-1">
-                  Correio Eletrónico Executivo / Admin
+                  Correio eletrónico
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="admin@aethel.mz ou beatriz.mendes@arquitetura.co.mz"
+                  placeholder="seunome@email.com"
                   className="w-full bg-[#f4f3f1] px-4 py-3 text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none"
                 />
               </div>
@@ -261,38 +261,11 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
               <button
                 type="submit"
                 disabled={submitting || !configured}
-                className="w-full py-4 bg-black text-white hover:bg-[#7d5540] text-[11px] uppercase font-semibold tracking-[0.16em] transition-colors shadow-sm mt-2"
+                className="w-full py-4 bg-[#005EA4] text-white hover:bg-[#132240] text-[11px] uppercase font-semibold tracking-[0.16em] transition-colors shadow-sm mt-2"
               >
-                {submitting ? 'A autenticar…' : 'Aceder ao Portal Concierge'}
+                {submitting ? 'A autenticar…' : 'Entrar na minha conta'}
               </button>
 
-              <div className="relative my-4 text-center">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#e9e8e6]"></div>
-                </div>
-                <span className="relative px-3 bg-white text-[10px] uppercase font-semibold tracking-wider text-[#7c766f]">
-                  Atalhos de Navegação Direta
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => onNavigate('gestao')}
-                  className="py-2.5 px-3 border border-[#cdc5bd] hover:border-black flex items-center justify-center gap-2 transition-colors text-xs font-semibold text-[#1a1c1b]"
-                >
-                  <span className="material-symbols-outlined text-[16px]">inventory_2</span>
-                  <span>Gestão Acervo</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onNavigate('dashboard')}
-                  className="py-2.5 px-3 border border-[#cdc5bd] hover:border-black flex items-center justify-center gap-2 transition-colors text-xs font-semibold text-[#1a1c1b]"
-                >
-                  <span className="material-symbols-outlined text-[16px]">analytics</span>
-                  <span>Painel B2B</span>
-                </button>
-              </div>
             </form>
           )}
 
@@ -384,7 +357,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
 
               <label className="flex items-start gap-2 pt-1 cursor-pointer text-[#7c766f]">
                 <input type="checkbox" defaultChecked required className="accent-black mt-0.5" />
-                <span>Concordo com os termos do programa curatorial e privacidade da Aethel.</span>
+                <span>Concordo com os termos e a política de privacidade da Eden.</span>
               </label>
 
               <button
@@ -392,7 +365,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
                 disabled={submitting || !configured}
                 className="w-full py-4 bg-black text-white hover:bg-[#7d5540] text-[11px] uppercase font-semibold tracking-[0.16em] transition-colors shadow-sm mt-2"
               >
-                {submitting ? 'A criar conta…' : 'Concluir Cadastro VIP'}
+                {submitting ? 'A criar conta…' : 'Criar a minha conta'}
               </button>
             </form>
           )}

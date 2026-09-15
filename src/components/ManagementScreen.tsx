@@ -18,7 +18,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
   onDeleteProduct,
   onNavigate
 }) => {
-  const { formatPrice } = useLocalization();
+  const { formatPrice, currency, convertFromMzn, convertToMzn } = useLocalization();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Todas');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -31,7 +31,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
   const [newDimensions, setNewDimensions] = useState('220 x 95 x 80 cm');
   const newAmbiente = 'Sala de Estar';
   const [newImage, setNewImage] = useState('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80');
-  const [newImageFile, setNewImageFile] = useState<File | null>(null);
+  const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -81,17 +81,20 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
     setSaving(true);
     setSaveError(null);
     try {
-      if (newImageFile) {
-        if (!newImageFile.type.startsWith('image/') || newImageFile.size > 5 * 1024 * 1024) {
-          throw new Error('A imagem deve ser JPG, PNG ou WebP e ter no máximo 5 MB.');
+      if (newImageFiles.length) {
+        if (newImageFiles.some((file) => !file.type.startsWith('image/') || file.size > 5 * 1024 * 1024)) {
+          throw new Error('Cada frame deve ser JPG, PNG ou WebP e ter no máximo 5 MB.');
         }
-        product.images = [await uploadProductImage(newImageFile, productId)];
+        product.images = [];
+        for (const file of newImageFiles) {
+          product.images.push(await uploadProductImage(file, productId));
+        }
       }
       await onAddProduct(product);
       setShowAddModal(false);
       setNewTitle('');
       setNewPrice(45000);
-      setNewImageFile(null);
+      setNewImageFiles([]);
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : 'Não foi possível guardar a peça.');
     } finally {
@@ -121,7 +124,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
               Gestão do Acervo & Fichas de Fabrico
             </h1>
             <p className="font-['Plus_Jakarta_Sans'] text-xs sm:text-sm text-[#4a4640] mt-1">
-              Controle mestre de catálogo, cotações em Meticais (MT), especificações técnicas e fichas de marcenaria.
+              Controle mestre de catálogo, cotações na moeda selecionada, especificações técnicas e fichas de marcenaria.
             </p>
           </div>
 
@@ -241,7 +244,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                 <th className="py-3 px-4">Ambiente & Categoria</th>
                 <th className="py-3 px-4">Material Predominante</th>
                 <th className="py-3 px-4">Dimensões</th>
-                <th className="py-3 px-4">Investimento (MT)</th>
+                <th className="py-3 px-4">Investimento ({currency})</th>
                 <th className="py-3 px-4">Disponibilidade</th>
                 <th className="py-3 px-4 text-right">Ações</th>
               </tr>
@@ -296,9 +299,9 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => {
-                          const newP = prompt('Novo valor para esta peça (em MT):', String(p.price));
+                          const newP = prompt(`Novo valor para esta peça (em ${currency}):`, String(Number(convertFromMzn(p.price).toFixed(2))));
                           if (newP && !isNaN(Number(newP))) {
-                            void onUpdateProduct({ ...p, price: Number(newP) }).catch((error) => setSaveError(error instanceof Error ? error.message : 'Falha ao atualizar.'));
+                            void onUpdateProduct({ ...p, price: convertToMzn(Number(newP)) }).catch((error) => setSaveError(error instanceof Error ? error.message : 'Falha ao atualizar.'));
                           }
                         }}
                         className="p-1 text-[#7c766f] hover:text-black"
@@ -360,9 +363,11 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
-                  onChange={(event) => setNewImageFile(event.target.files?.[0] ?? null)}
+                  multiple
+                  onChange={(event) => setNewImageFiles(Array.from(event.target.files ?? []).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true })))}
                   className="mt-2 block w-full text-[11px] text-[#7c766f] file:mr-3 file:border-0 file:bg-[#efeeec] file:px-3 file:py-2 file:text-[10px] file:font-semibold file:uppercase"
                 />
+                <span className="mt-1 block text-[10px] text-[#7c766f]">Selecione 24–72 frames na ordem da rotação para ativar o modo 360°. Com menos de 12, o visor apresenta as vistas reais sem alegar 360°.</span>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -385,13 +390,14 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
 
                 <div>
                   <label className="block text-[#7c766f] uppercase tracking-wider font-semibold text-[10px] mb-1">
-                    Investimento (MT)
+                    Investimento ({currency})
                   </label>
                   <input
                     type="number"
                     required
-                    value={newPrice}
-                    onChange={(e) => setNewPrice(Number(e.target.value))}
+                    step="0.01"
+                    value={Number(convertFromMzn(newPrice).toFixed(2))}
+                    onChange={(e) => setNewPrice(convertToMzn(Number(e.target.value)))}
                     className="w-full bg-[#f4f3f1] px-3.5 py-2.5 text-[#1a1c1b] border border-[#cdc5bd] focus:bg-white focus:outline-none font-mono"
                   />
                 </div>

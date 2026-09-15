@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ActiveScreen, Product, Currency, Language } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
 import { useAuth } from '../context/AuthContext';
+import edenLogo from '../assets/images/eden-logo-official.png';
 
 interface NavbarProps {
   activeScreen: ActiveScreen;
@@ -28,8 +29,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   products = [],
   onSelectProduct
 }) => {
-  const { currency, setCurrency, lang, setLang, formatPrice, t } = useLocalization();
-  const { user, isAdmin } = useAuth();
+  const {
+    currency, setCurrency, lang, setLang, formatPrice, t,
+    getExchangeLabel, ratesLoading, ratesUpdatedAt, rateError, translationError
+  } = useLocalization();
+  const { user } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -38,22 +42,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const catalog = products;
+  const tickerItems = [
+    <>Frete cortesia para mobiliário assinado acima de {formatPrice(50000)} • Consultoria B2B e Residencial</>,
+    <>Vendas a retalho • +258 87 000 3388 • esales@esm.co.mz</>,
+    <>Personalização de produtos para responder às necessidades de cada cliente</>,
+    <>Fábricas em Matola, Beira e Nampula</>,
+    <>Mais do que uma marca, a escolha para um sono saudável</>
+  ];
 
   // Exact pages of the application with translation keys
   const navPages = ([
     { id: 'home', key: 'nav.home', label: t('nav.home', 'Início') },
-    { id: 'catalogo', key: 'nav.catalogo', label: t('nav.catalogo', 'Coleções') },
-    { id: 'showrooms', key: 'nav.showrooms', label: t('nav.showrooms', 'Showrooms') },
-    { id: 'minha-conta', key: 'nav.minha_conta', label: t('nav.minha_conta', 'Minha Conta') },
-    { id: 'autenticacao', key: 'nav.portal_vip', label: t('nav.portal_vip', 'Portal VIP') },
-    { id: 'gestao', key: 'nav.gestao', label: t('nav.gestao', 'Gestão Acervo') },
-    { id: 'dashboard', key: 'nav.dashboard', label: t('nav.dashboard', 'Painel B2B') }
-  ] satisfies { id: ActiveScreen; key: string; label: string }[]).filter((page) => {
-    if (page.id === 'gestao' || page.id === 'dashboard') return isAdmin;
-    if (page.id === 'autenticacao') return !user;
-    if (page.id === 'minha-conta') return Boolean(user);
-    return true;
-  });
+    { id: 'sobre', key: 'nav.sobre', label: t('nav.sobre', 'Sobre Eden') },
+    { id: 'colecoes', key: 'nav.colecoes', label: t('nav.colecoes', 'Coleções') },
+    { id: 'catalogo', key: 'nav.loja', label: t('nav.loja', 'Loja') },
+    { id: 'showrooms', key: 'nav.sucursais', label: t('nav.sucursais', 'Sucursais') },
+    { id: 'contacto', key: 'nav.contacto', label: t('nav.contacto', 'Contacto') }
+  ] satisfies { id: ActiveScreen; key: string; label: string }[]);
 
   // Quick keyword filters for instant search
   const quickKeywords = [
@@ -139,29 +144,41 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header className="fixed top-0 left-0 w-full z-40 bg-[#faf9f7]/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#e9e8e6]/80">
         {/* Top Announcement Ribbon */}
-        <div className="bg-[#f4f3f1] text-[#4a4640] border-b border-[#e3e2e0]/60">
+        <div className="eden-ticker-bar bg-[#132240] text-white border-b border-[#132240]">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 h-8 sm:h-9 flex items-center justify-between font-['Plus_Jakarta_Sans'] text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-semibold gap-3">
-            <div className="truncate flex items-center gap-2 min-w-0">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#7d5540] shrink-0"></span>
-              <span className="truncate">
-                {t('ribbon.text', 'Frete cortesia para mobiliário assinado acima de 50.000 MT • Consultoria B2B e Residencial')}
-              </span>
+            <div className="eden-ticker min-w-0 flex-1 overflow-hidden" aria-label="Informações e novidades Eden">
+              <div className="eden-ticker-track flex w-max items-center whitespace-nowrap">
+                {[false, true].map((duplicate) => (
+                  <div
+                    key={duplicate ? 'ticker-copy' : 'ticker-original'}
+                    className="eden-ticker-group flex shrink-0 items-center gap-8 sm:gap-12 pr-8 sm:pr-12"
+                    aria-hidden={duplicate || undefined}
+                  >
+                    {tickerItems.map((item, index) => (
+                      <span key={index} className="flex items-center gap-8 sm:gap-12">
+                        <span>{item}</span>
+                        <span className="h-1 w-1 rounded-full bg-white/60" aria-hidden="true" />
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="hidden sm:flex items-center gap-3 sm:gap-4 shrink-0 text-[#4a4640]">
+            <div className="hidden sm:flex items-center gap-3 sm:gap-4 shrink-0 text-white">
               {/* Currency Selector with Dropdown */}
-              <div className="relative">
+              <div className="relative" data-no-translate>
                 <button
                   type="button"
                   onClick={() => {
                     setCurrencyMenuOpen(!currencyMenuOpen);
                     setLangMenuOpen(false);
                   }}
-                  className="flex items-center gap-1 cursor-pointer hover:text-[#1a1c1b] transition-colors py-1 px-1.5 rounded hover:bg-black/5"
+                  className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors py-1 px-1.5 rounded hover:bg-white/10"
                   title="Alterar Moeda (MZN, USD, EUR)"
                 >
-                  <span className="font-bold text-[#1a1c1b]">
-                    {currency === 'MZN' ? 'MT (MZN)' : currency === 'USD' ? '$ (USD)' : '€ (EUR)'}
+                  <span className="font-bold text-white">
+                    {currency}
                   </span>
                   <span className="material-symbols-outlined text-[14px]">
                     {currencyMenuOpen ? 'expand_less' : 'expand_more'}
@@ -169,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
 
                 {currencyMenuOpen && (
-                  <div className="absolute right-0 top-full mt-1 bg-white border border-[#e9e8e6] shadow-xl py-1 z-50 min-w-[140px] text-xs font-['Plus_Jakarta_Sans']">
+                  <div className="absolute right-0 top-full mt-1 bg-white border border-[#e9e8e6] shadow-xl py-1 z-50 min-w-[250px] text-xs font-['Plus_Jakarta_Sans']">
                     <button
                       onClick={() => {
                         setCurrency('MZN');
@@ -179,7 +196,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         currency === 'MZN' ? 'bg-[#faf9f7] font-bold text-[#1a1c1b]' : 'hover:bg-[#f4f3f1] text-[#4a4640]'
                       }`}
                     >
-                      <span>MT • Moçambique</span>
+                      <span>MZN • Moçambique</span>
                       {currency === 'MZN' && <span className="material-symbols-outlined text-[14px]">check</span>}
                     </button>
                     <button
@@ -206,6 +223,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span>€ • Euro (EUR)</span>
                       {currency === 'EUR' && <span className="material-symbols-outlined text-[14px]">check</span>}
                     </button>
+                    <div className="border-t border-[#e9e8e6] mt-1 px-3 py-2.5 normal-case tracking-normal space-y-1 text-[11px] text-[#4a4640]">
+                      {ratesLoading ? <span>A atualizar taxas…</span> : rateError ? <span className="text-red-700">{rateError}</span> : <>
+                        <span className="block font-semibold">{getExchangeLabel('USD', 'MZN')}</span>
+                        <span className="block font-semibold">{getExchangeLabel('EUR', 'MZN')}</span>
+                        <span className="block">{getExchangeLabel('USD', 'EUR')}</span>
+                        {ratesUpdatedAt && <span className="block text-[9px] text-[#7c766f]">Atualização: {ratesUpdatedAt.toLocaleDateString('pt-MZ')}</span>}
+                      </>}
+                      <a href="https://www.exchangerate-api.com" target="_blank" rel="noreferrer" className="block text-[9px] text-[#7d5540] hover:underline">Rates by ExchangeRate-API</a>
+                    </div>
                   </div>
                 )}
               </div>
@@ -213,17 +239,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="opacity-30">|</span>
 
               {/* Language Selector with Dropdown */}
-              <div className="relative">
+              <div className="relative" data-no-translate>
                 <button
                   type="button"
                   onClick={() => {
                     setLangMenuOpen(!langMenuOpen);
                     setCurrencyMenuOpen(false);
                   }}
-                  className="flex items-center gap-1 cursor-pointer hover:text-[#1a1c1b] transition-colors py-1 px-1.5 rounded hover:bg-black/5"
+                  className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors py-1 px-1.5 rounded hover:bg-white/10"
                   title="Alterar Idioma (Português / English)"
                 >
-                  <span className="font-bold text-[#1a1c1b]">{lang}</span>
+                  <span className="font-bold text-white">{lang}</span>
                   <span className="material-symbols-outlined text-[14px]">
                     {langMenuOpen ? 'expand_less' : 'expand_more'}
                   </span>
@@ -255,6 +281,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span>English</span>
                       {lang === 'EN' && <span className="material-symbols-outlined text-[14px]">check</span>}
                     </button>
+                    {translationError && <p className="px-3 py-2 border-t border-[#e9e8e6] text-[10px] normal-case tracking-normal text-red-700">{translationError}</p>}
+                    <a href="https://mymemory.translated.net" target="_blank" rel="noreferrer" className="block px-3 py-2 border-t border-[#e9e8e6] text-[9px] normal-case tracking-normal text-[#7d5540] hover:underline">Automatic translation by MyMemory</a>
                   </div>
                 )}
               </div>
@@ -267,19 +295,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Brand Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-2.5 text-left group focus:outline-none shrink-0"
+            className="flex h-full items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FDCB00] focus-visible:ring-offset-2 shrink-0"
+            aria-label="Ir para a página inicial da Eden"
           >
-            <span className="font-['Playfair_Display'] font-black text-3xl text-black group-hover:text-[#7d5540] transition-colors leading-none">
-              
-            </span>
-            <div className="flex flex-col">
-              <span className="font-['Playfair_Display'] text-lg sm:text-xl font-bold tracking-[0.25em] text-black leading-tight uppercase">
-                EDEN
-              </span>
-              <span className="font-['Plus_Jakarta_Sans'] text-[8px] font-semibold tracking-[0.38em] text-[#8C857B] uppercase leading-none">
-                Colchões & Mobiliarios
-              </span>
-            </div>
+            <img
+              src={edenLogo}
+              alt="Eden — Colchões e Mobília"
+              className="h-12 w-auto max-w-[118px] object-contain sm:h-16 sm:max-w-[158px]"
+            />
           </button>
 
           {/* Primary Navigation Links (Desktop) */}
@@ -292,8 +315,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => onNavigate(page.id)}
                   className={`font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-[0.14em] transition-all pb-1 border-b-2 whitespace-nowrap ${
                     isActive
-                      ? 'text-[#1a1c1b] border-black font-bold'
-                      : 'text-[#4a4640] border-transparent font-semibold hover:text-[#1a1c1b] hover:border-[#cdc5bd]'
+                      ? 'text-[#005EA4] border-[#FDCB00] font-bold'
+                      : 'text-[#132240] border-transparent font-semibold hover:text-[#005EA4] hover:border-[#FDCB00]'
                   }`}
                 >
                   {page.label}
@@ -324,7 +347,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span className="material-symbols-outlined text-[22px]">favorite</span>
               {favoritesCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-[#7d5540] text-white font-['Plus_Jakarta_Sans'] text-[9px] font-bold flex items-center justify-center leading-none">
+                <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-[#FDCB00] text-[#132240] font-['Plus_Jakarta_Sans'] text-[9px] font-bold flex items-center justify-center leading-none">
                   {favoritesCount}
                 </span>
               )}
@@ -338,7 +361,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
               {cartCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-black text-white font-['Plus_Jakarta_Sans'] text-[9px] font-bold flex items-center justify-center leading-none">
+                <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-[#005EA4] text-white font-['Plus_Jakarta_Sans'] text-[9px] font-bold flex items-center justify-center leading-none">
                   {cartCount}
                 </span>
               )}
@@ -346,29 +369,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* User Profile Avatar with Role Tag */}
             {user ? <div
-              onClick={() => {
-                if (isAdmin) {
-                  onNavigate('gestao');
-                } else {
-                  onNavigate('minha-conta');
-                }
-              }}
+              data-no-translate
+              onClick={() => onNavigate('minha-conta')}
               className="hidden sm:flex items-center gap-1.5 pl-1 cursor-pointer group"
-              title={`Sessão: ${user.name} (${isAdmin ? 'Administrador' : 'VIP'})`}
+              title={`Conta de cliente: ${user.name}`}
             >
               <div className="relative">
                 <img
                   src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
                   alt={user.name}
                   className={`w-8 h-8 rounded-full object-cover ring-2 transition-all ${
-                    isAdmin ? 'ring-[#7d5540]' : 'ring-[#e9e8e6] group-hover:ring-black'
+                    'ring-[#e9e8e6] group-hover:ring-[#005EA4]'
                   }`}
                 />
-                {isAdmin && (
-                  <span className="absolute -bottom-1 -right-1 bg-black text-[#fec9ae] text-[8px] font-mono px-1 py-0.2 rounded font-bold border border-white">
-                    ADM
-                  </span>
-                )}
               </div>
             </div> : <button
               type="button"
@@ -397,7 +410,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {mobileMenuOpen && (
           <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-4 sm:px-6 py-4 sm:py-5 space-y-4 shadow-xl max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain">
             {/* Currency & Language in Mobile Drawer */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e9e8e6] text-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e9e8e6] text-xs" data-no-translate>
               <div className="flex items-center justify-between sm:justify-start gap-2">
                 <span className="text-[#7c766f]">Moeda:</span>
                 {(['MZN', 'USD', 'EUR'] as Currency[]).map((c) => (
@@ -428,6 +441,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ))}
               </div>
             </div>
+            <div className="text-[10px] text-[#7c766f] space-y-0.5" data-no-translate>
+              <span className="block">{getExchangeLabel('USD', 'MZN')} • {getExchangeLabel('EUR', 'MZN')}</span>
+              {translationError && <span className="block text-red-700">{translationError}</span>}
+            </div>
 
             {/* Search Shortcut in Mobile Drawer */}
             <div
@@ -457,8 +474,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className={`text-left py-2.5 px-3 flex items-center justify-between transition-colors ${
                       isActive
-                        ? 'bg-black text-white font-bold'
-                        : 'text-[#1a1c1b] hover:bg-[#f4f3f1] hover:text-[#7d5540]'
+                        ? 'bg-[#005EA4] text-white font-bold'
+                        : 'text-[#132240] hover:bg-[#eef7fc] hover:text-[#005EA4]'
                     }`}
                   >
                     <span>{page.label}</span>

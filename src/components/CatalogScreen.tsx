@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Product, ActiveScreen } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
 
@@ -32,6 +32,25 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
+
+  const heroSlides = useMemo(
+    () => products.filter((product) => Boolean(product.images[0])).slice(0, 3),
+    [products]
+  );
+
+  useEffect(() => {
+    if (activeHeroSlide >= heroSlides.length) setActiveHeroSlide(0);
+  }, [activeHeroSlide, heroSlides.length]);
+
+  useEffect(() => {
+    if (heroPaused || heroSlides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+    }, 6000);
+    return () => window.clearInterval(timer);
+  }, [heroPaused, heroSlides.length]);
 
   const ambientesList = [
     { label: 'Todos', count: products.length },
@@ -105,7 +124,65 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
   };
 
   return (
-    <div className="w-full bg-[#faf9f7] pt-8 pb-20">
+    <div className="w-full bg-white pt-8 pb-20">
+      {heroSlides.length > 0 && (
+        <section
+          className="eden-card eden-dark-surface relative mx-auto mb-10 h-[370px] max-w-[1600px] overflow-hidden bg-[#132240] sm:h-[440px] lg:h-[500px]"
+          aria-roledescription="carousel"
+          aria-label="Destaques da loja Eden"
+          onMouseEnter={() => setHeroPaused(true)}
+          onMouseLeave={() => setHeroPaused(false)}
+          onFocus={() => setHeroPaused(true)}
+          onBlur={() => setHeroPaused(false)}
+        >
+          {heroSlides.map((slide, index) => (
+            <img
+              key={slide.id}
+              src={slide.images[0]}
+              alt=""
+              aria-hidden="true"
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === activeHeroSlide ? 'opacity-100' : 'opacity-0'}`}
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
+          <div className="relative z-10 flex h-full max-w-2xl flex-col justify-center px-5 py-10 text-white sm:px-10 lg:px-16">
+            <span className="mb-4 w-fit border-l-4 border-[#FDCB00] pl-3 text-xs font-bold uppercase tracking-[0.18em] text-white">
+              {heroSlides[activeHeroSlide].badge || 'Destaque Eden'}
+            </span>
+            <h1 className="break-words text-3xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+              {heroSlides[activeHeroSlide].title}
+            </h1>
+            <p className="mt-4 line-clamp-2 max-w-xl text-sm leading-7 text-white/90 sm:text-base">
+              {heroSlides[activeHeroSlide].description}
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <button
+                type="button"
+                onClick={() => onSelectProduct(heroSlides[activeHeroSlide])}
+                className="bg-[#FDCB00] px-6 py-3 text-sm font-bold uppercase tracking-wider text-[#132240] transition hover:bg-[#f4cd24]"
+              >
+                Ver produto
+              </button>
+              <span className="text-lg font-bold text-white">{formatPrice(heroSlides[activeHeroSlide].price)}</span>
+            </div>
+          </div>
+
+          {heroSlides.length > 1 && (
+            <div className="absolute bottom-5 right-5 z-20 flex items-center gap-2 sm:bottom-7 sm:right-8">
+              {heroSlides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  onClick={() => setActiveHeroSlide(index)}
+                  className={`h-2.5 transition-all ${index === activeHeroSlide ? 'w-9 bg-[#FDCB00]' : 'w-2.5 bg-white/70 hover:bg-white'}`}
+                  aria-label={`Mostrar destaque ${index + 1}: ${slide.title}`}
+                  aria-current={index === activeHeroSlide ? 'true' : undefined}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f] mb-6">
@@ -248,8 +325,8 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
                 className="w-full accent-black cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-[#7c766f] font-mono">
-                <span>10.000 MT</span>
-                <span>100.000 MT</span>
+                <span>{formatPrice(10000)}</span>
+                <span>{formatPrice(100000)}</span>
               </div>
             </div>
 
@@ -369,7 +446,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
                 return (
                   <div
                     key={p.id}
-                    className="group flex flex-col bg-white p-3.5 border border-[#e9e8e6] shadow-xs hover:shadow-md transition-shadow"
+                    className="eden-card group flex flex-col bg-white p-3.5 border border-[#e9e8e6] shadow-xs hover:shadow-md transition-shadow"
                   >
                     {/* Imagem do Produto com Proporção 4:5 */}
                     <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#efeeec]">

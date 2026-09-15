@@ -86,7 +86,10 @@ export async function listProducts(): Promise<Product[]> {
     .eq('active', true)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    if (import.meta.env.DEV && error.code === 'PGRST205') return AETHEL_PRODUCTS;
+    throw error;
+  }
   return ((data ?? []) as ProductRow[]).map(mapProduct);
 }
 
@@ -101,7 +104,10 @@ export async function listShowrooms(): Promise<ShowroomLocation[]> {
     .select('*')
     .eq('active', true)
     .order('name');
-  if (error) throw error;
+  if (error) {
+    if (import.meta.env.DEV && error.code === 'PGRST205') return SHOWROOMS;
+    throw error;
+  }
   return (data ?? []).map((row) => ({
     id: row.id,
     name: row.name,

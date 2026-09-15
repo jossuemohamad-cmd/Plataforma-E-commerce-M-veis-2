@@ -8,7 +8,7 @@ interface DashboardScreenProps {
 }
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) => {
-  const { formatPrice } = useLocalization();
+  const { formatPrice, currency } = useLocalization();
   const [recentOrders, setRecentOrders] = useState<DashboardOrder[]>([]);
   const [metrics, setMetrics] = useState({ revenue: 0, processing: 0, average: 0 });
 
@@ -23,8 +23,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
   }, []);
 
   const exportOrders = () => {
-    const csv = ['Ordem,Cliente,Itens,Valor,Estado', ...recentOrders.map((order) =>
-      [order.id, order.client, order.items, order.value, order.status].map((value) => `"${String(value).replaceAll('"', '""')}"`).join(',')
+    const csv = [`Ordem,Cliente,Itens,Valor (${currency}),Estado`, ...recentOrders.map((order) =>
+      [order.id, order.client, order.items, formatPrice(order.value), order.status].map((value) => `"${String(value).replaceAll('"', '""')}"`).join(',')
     )].join('\n');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
     const link = document.createElement('a');
@@ -72,7 +72,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
               className="w-full sm:w-auto justify-center px-5 py-2.5 bg-black text-white hover:bg-[#7d5540] font-['Plus_Jakarta_Sans'] text-xs uppercase font-semibold tracking-wider transition-colors flex items-center gap-2 shadow-xs"
             >
               <span className="material-symbols-outlined text-[16px]">file_download</span>
-              <span>Exportar Balanço MT</span>
+              <span>Exportar Balanço {currency}</span>
             </button>
           </div>
         </div>
@@ -291,7 +291,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
                 {recentOrders.map((ord) => (
                   <tr key={ord.id} className="hover:bg-[#faf9f7] transition-colors">
                     <td className="py-3 font-mono font-bold text-[#1a1c1b]">{ord.id}</td>
-                    <td className="py-3 font-medium text-[#1a1c1b]">{ord.client}</td>
+                    <td translate="no" className="py-3 font-medium text-[#1a1c1b]">{ord.client}</td>
                     <td className="py-3 text-[#4a4640]">{ord.project}</td>
                     <td className="py-3 text-[#7c766f] max-w-xs truncate">{ord.items}</td>
                     <td className="py-3 font-bold text-[#1a1c1b]">{formatPrice(ord.value)}</td>

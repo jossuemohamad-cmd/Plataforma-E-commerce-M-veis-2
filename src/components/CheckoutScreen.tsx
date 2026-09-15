@@ -21,7 +21,6 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
   onPlaceOrder
 }) => {
   const { formatPrice } = useLocalization();
-  const [selectedAddress, setSelectedAddress] = useState<1 | 2>(1);
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'pos' | 'card'>('transfer');
   const [hasElevator, setHasElevator] = useState(true);
   const [hasWideStairs, setHasWideStairs] = useState(true);
@@ -110,8 +109,8 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
               <span className="font-bold text-[#1a1c1b]">{formatPrice(confirmedOrder?.total ?? total)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[#7c766f]">Previsão de Entrega:</span>
-              <span className="font-medium text-[#1a1c1b]">28 de Fevereiro de 2025</span>
+              <span className="text-[#7c766f]">Entrega:</span>
+              <span className="font-medium text-[#1a1c1b]">Prazo a confirmar pela equipa Eden</span>
             </div>
           </div>
 
@@ -196,7 +195,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   </label>
                   <input
                     type="text"
-                    defaultValue="400 892 108"
+                    placeholder="Opcional"
                     className="w-full bg-[#f4f3f1] px-3.5 py-2.5 text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none font-mono"
                   />
                 </div>
@@ -207,7 +206,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   </label>
                   <input
                     type="email"
-                    defaultValue="beatriz.mendes@arquitetura.co.mz"
+                    placeholder="seunome@email.com"
                     className="w-full bg-[#f4f3f1] px-3.5 py-2.5 text-[#1a1c1b] border border-[#e9e8e6] focus:bg-white focus:outline-none"
                   />
                 </div>
@@ -236,58 +235,6 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 <h3 className="font-['Playfair_Display'] text-xl text-[#1a1c1b] font-normal">
                   Morada de Entrega & Acesso ao Imóvel
                 </h3>
-              </div>
-
-              <div className="space-y-3 mb-4">
-                {/* Morada 1 */}
-                <div
-                  onClick={() => setSelectedAddress(1)}
-                  className={`p-4 border cursor-pointer transition-colors flex items-start gap-3 ${
-                    selectedAddress === 1 ? 'border-black bg-[#faf9f7]' : 'border-[#e9e8e6] hover:bg-[#faf9f7]'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="address"
-                    checked={selectedAddress === 1}
-                    onChange={() => setSelectedAddress(1)}
-                    className="accent-black mt-1"
-                  />
-                  <div className="font-['Plus_Jakarta_Sans'] text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-[#1a1c1b]">Residencial Polana Cimento (Principal)</span>
-                      <span className="px-2 py-0.5 bg-[#efeeec] text-[9px] font-bold uppercase text-[#7d5540]">
-                        Padrão
-                      </span>
-                    </div>
-                    <p className="text-[#4a4640] mt-1">
-                      Av. Armando Tivane, 1420 • 4º Andar Nascente, Polana Cimento, Maputo Cidade
-                    </p>
-                    <span className="text-[11px] text-[#7c766f]">Ponto de referência: Próximo à Escola Portuguesa</span>
-                  </div>
-                </div>
-
-                {/* Morada 2 */}
-                <div
-                  onClick={() => setSelectedAddress(2)}
-                  className={`p-4 border cursor-pointer transition-colors flex items-start gap-3 ${
-                    selectedAddress === 2 ? 'border-black bg-[#faf9f7]' : 'border-[#e9e8e6] hover:bg-[#faf9f7]'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="address"
-                    checked={selectedAddress === 2}
-                    onChange={() => setSelectedAddress(2)}
-                    className="accent-black mt-1"
-                  />
-                  <div className="font-['Plus_Jakarta_Sans'] text-xs">
-                    <span className="font-bold text-[#1a1c1b]">Atelier de Arquitetura Sommerchield</span>
-                    <p className="text-[#4a4640] mt-1">
-                      Rua do Rio Raraga, 88, Bairro Sommerchield II, Maputo Cidade
-                    </p>
-                  </div>
-                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 font-['Plus_Jakarta_Sans'] text-xs">
@@ -358,15 +305,15 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   <span className="material-symbols-outlined text-[#7d5540] text-[24px] mt-0.5">front_hand</span>
                   <div>
                     <h5 className="font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#1a1c1b] uppercase tracking-wider">
-                      Serviço Luva Branca Aethel Studio (Cortesia VIP)
+                      Entrega e montagem Eden
                     </h5>
                     <p className="font-['Plus_Jakarta_Sans'] text-xs text-[#4a4640] mt-1 leading-relaxed">
-                      Equipe própria de montadores técnicos treinados em marcenaria fina. Desembalagem cuidadosa, nivelamento arquitetural, posicionamento no ambiente desejado e recolha ecológica de todas as embalagens.
+                      A disponibilidade, cobertura, prazo e eventual custo do serviço serão confirmados pela equipa Eden antes da conclusão do pagamento.
                     </p>
                   </div>
                 </div>
                 <span className="self-end sm:self-auto font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#7d5540] whitespace-nowrap uppercase">
-                  Gratuito
+                  Sob confirmação
                 </span>
               </div>
             </div>
@@ -396,7 +343,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                       Transferência Imediata
                     </span>
                     <span className="font-['Plus_Jakarta_Sans'] text-[10px] text-[#7c766f]">
-                      BCI • BIM • Standard Bank
+                      Instruções após confirmação
                     </span>
                   </div>
                 </button>
@@ -442,22 +389,10 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
               {paymentMethod === 'transfer' && (
                 <div className="p-4 bg-[#f4f3f1] border border-[#e9e8e6] font-['Plus_Jakarta_Sans'] text-xs space-y-2">
                   <span className="font-bold uppercase tracking-wider text-[#1a1c1b] block text-[10px]">
-                    Coordenadas Bancárias Oficiais da Aethel Studio Lda:
+                    Pagamento por transferência
                   </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[#4a4640]">
-                    <div>
-                      <p><strong>Banco:</strong> Millennium BIM</p>
-                      <p><strong>Conta:</strong> 102 938 475</p>
-                      <p><strong>NIB:</strong> 0001 0000 0102 9384 7510 2</p>
-                    </div>
-                    <div>
-                      <p><strong>Banco:</strong> BCI (Banco Comercial)</p>
-                      <p><strong>Conta:</strong> 882 341 092</p>
-                      <p><strong>NIB:</strong> 0008 0000 0882 3410 9220 5</p>
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-[#7c766f] pt-1">
-                    Após a emissão da ordem, envie o comprovativo para <strong>financeiro@aethelstudio.com</strong> ou anexe diretamente neste canal.
+                  <p className="text-xs leading-6 text-[#4a4640]">
+                    A equipa Eden enviará as coordenadas bancárias verificadas pelos contactos associados à encomenda. Não faça transferências para dados apresentados fora dessa confirmação.
                   </p>
                 </div>
               )}
@@ -520,7 +455,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                   className="accent-black mt-0.5 w-4 h-4"
                 />
                 <span className="leading-relaxed">
-                  Declaro que li e concordo com os prazos de produção artesanal (12 a 18 dias úteis), a política de montagem de Luva Branca e a garantia estrutural de 24 meses emitida pela Aethel Studio.
+                  Declaro que os dados da encomenda estão correctos e aceito receber da Eden a confirmação final de disponibilidade, entrega, montagem, pagamento e garantia aplicável ao produto.
                 </span>
               </label>
 
@@ -626,7 +561,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
               </div>
               <div className="flex justify-between text-[#4a4640]">
                 <span>Montagem Luva Branca:</span>
-                <span className="text-[#7d5540] font-bold">Cortesia (0 MT)</span>
+                <span className="text-[#7d5540] font-bold">Cortesia ({formatPrice(0)})</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-[#7d5540]">

@@ -42,13 +42,16 @@ export async function saveProduct(product: Product): Promise<void> {
     tags: product.tags ?? []
   });
   if (error) throw error;
-  if (product.images[0]) {
-    const { error: imageError } = await client.from('product_images').upsert({
-      product_id: product.id,
-      public_url: product.images[0],
-      alt_text: product.title,
-      position: 0
-    }, { onConflict: 'product_id,position' });
+  if (product.images.length) {
+    const { error: imageError } = await client.from('product_images').upsert(
+      product.images.map((publicUrl, position) => ({
+        product_id: product.id,
+        public_url: publicUrl,
+        alt_text: `${product.title}, vista ${position + 1}`,
+        position
+      })),
+      { onConflict: 'product_id,position' }
+    );
     if (imageError) throw imageError;
   }
 }

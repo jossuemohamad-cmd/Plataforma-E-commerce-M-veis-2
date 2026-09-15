@@ -1,190 +1,154 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Currency, Language } from '../types';
+import { activateAutomaticTranslation } from '../lib/automaticPageTranslator';
+
+interface ExchangeRates {
+  MZN: number;
+  USD?: number;
+  EUR?: number;
+}
 
 interface LocalizationContextType {
   currency: Currency;
-  setCurrency: (c: Currency) => void;
+  setCurrency: (currency: Currency) => void;
   lang: Language;
-  setLang: (l: Language) => void;
+  setLang: (language: Language) => void;
   formatPrice: (amountInMZN: number) => string;
+  convertFromMzn: (amountInMZN: number) => number;
+  convertToMzn: (amount: number) => number;
+  getExchangeLabel: (base: Currency, target: Currency) => string;
+  ratesLoading: boolean;
+  ratesUpdatedAt: Date | null;
+  rateError: string | null;
+  translationError: string | null;
   t: (key: string, fallback?: string) => string;
 }
 
-const DICTIONARY: Record<Language, Record<string, string>> = {
-  PT: {
-    // Navigation
-    'nav.home': 'Início',
-    'nav.catalogo': 'Coleções',
-    'nav.showrooms': 'Showrooms',
-    'nav.minha_conta': 'Minha Conta',
-    'nav.portal_vip': 'Portal VIP',
-    'nav.gestao': 'Gestão Acervo',
-    'nav.dashboard': 'Painel B2B',
-    'ribbon.text': 'Frete cortesia para mobiliário assinado acima de 50.000 MT • Consultoria B2B e Residencial',
-    'search.placeholder': 'Pesquisar por peça, estilo, material, arquiteto ou SKU...',
-    'search.suggestions': 'Sugestões:',
-    'search.realtime': 'Busca em Tempo Real (AJAX)',
-    'search.view_all': 'Ver todos os resultados no Catálogo',
-    'search.no_results': 'Nenhum resultado encontrado',
-    'search.clean': 'Limpar',
-    'search.found': 'peças encontradas',
-    'search.single_found': 'peça encontrada',
-
-    // Hero
-    'hero.badge': 'Lançamento Coleção 2025',
-    'hero.title': 'Mobiliário Autoral Onde a Nobreza da Madeira Encontra a Pureza das Formas',
-    'hero.subtitle': 'Peças exclusivas desenhadas para resistir às tendências e acolher a vida contemporânea com sofisticação tátil, harmonia visual e presença escultural.',
-    'hero.cta_explore': 'Explorar Coleção',
-    'hero.cta_virtual': 'Visitar Showroom Virtual',
-    'hero.scenario_title': 'Cenário Arquitetural',
-    'hero.scenario_name': 'Living Nuvola & Pátio',
-    'hero.scenario_loc': 'Maputo • Residencial Privado 04',
-
-    // Common buttons & badges
-    'btn.add_to_cart': 'Adicionar ao Caderno',
-    'btn.checkout': 'Finalizar Pedido',
-    'btn.back': 'Voltar',
-    'btn.cancel': 'Cancelar',
-    'btn.save': 'Salvar',
-    'btn.filter': 'Filtros',
-    'btn.view_product': 'Ver Peça',
-    'btn.login': 'Iniciar Sessão',
-    'btn.register': 'Criar Conta Exclusiva',
-    'btn.quick_add': 'Quick Add',
-    'badge.instock': 'Pronta Entrega',
-    'badge.order': 'Sob Encomenda',
-    'badge.fsc': 'Madeira FSC Maciça',
-    'badge.warranty': '24 Meses Garantia',
-    'badge.white_glove': 'Entrega Luva Branca',
-    'badge.certified': 'Certificado Autoral',
-
-    // Screens
-    'catalog.title': 'Acervo & Coleções 2025',
-    'catalog.subtitle': 'Mobiliário de marcenaria artesanal e pedras nobres com curadoria contemporânea.',
-    'cart.title': 'Caderno de Compras',
-    'cart.empty': 'O seu caderno de aquisição está vazio.',
-    'checkout.title': 'Finalização de Pedido',
-    'showrooms.title': 'Rede de Showrooms & Espaços',
-    'management.title': 'Gestão Curatorial do Acervo',
-    'dashboard.title': 'Painel Executivo B2B & Oficinas'
-  },
-  EN: {
-    // Navigation
-    'nav.home': 'Home',
-    'nav.catalogo': 'Collections',
-    'nav.showrooms': 'Showrooms',
-    'nav.minha_conta': 'My Account',
-    'nav.portal_vip': 'VIP Portal',
-    'nav.gestao': 'Collection Mgmt',
-    'nav.dashboard': 'B2B Dashboard',
-    'ribbon.text': 'Complimentary white-glove delivery on orders above $800 • B2B & Residential Consulting',
-    'search.placeholder': 'Search by piece, style, noble material, architect or SKU...',
-    'search.suggestions': 'Suggestions:',
-    'search.realtime': 'Real-Time Live Search (AJAX)',
-    'search.view_all': 'View all results in Catalog',
-    'search.no_results': 'No pieces found',
-    'search.clean': 'Clear',
-    'search.found': 'pieces found',
-    'search.single_found': 'piece found',
-
-    // Hero
-    'hero.badge': '2025 Signature Collection',
-    'hero.title': 'Authorial Furniture Where the Nobility of Wood Meets Pure Geometry',
-    'hero.subtitle': 'Bespoke sculptural furniture crafted to transcend trends and embrace contemporary living with tactile refinement and visual harmony.',
-    'hero.cta_explore': 'Explore Collection',
-    'hero.cta_virtual': 'Visit Virtual Showroom',
-    'hero.scenario_title': 'Architectural Setting',
-    'hero.scenario_name': 'Living Nuvola & Patio',
-    'hero.scenario_loc': 'Maputo • Private Residence 04',
-
-    // Common buttons & badges
-    'btn.add_to_cart': 'Add to Selection',
-    'btn.checkout': 'Proceed to Checkout',
-    'btn.back': 'Back',
-    'btn.cancel': 'Cancel',
-    'btn.save': 'Save',
-    'btn.filter': 'Filters',
-    'btn.view_product': 'View Piece',
-    'btn.login': 'Sign In',
-    'btn.register': 'Create VIP Account',
-    'btn.quick_add': 'Quick Add',
-    'badge.instock': 'In Stock',
-    'badge.order': 'Made to Order',
-    'badge.fsc': 'FSC Solid Hardwood',
-    'badge.warranty': '24-Month Warranty',
-    'badge.white_glove': 'White-Glove Delivery',
-    'badge.certified': 'Certified Artwork',
-
-    // Screens
-    'catalog.title': 'Signature Collection 2025',
-    'catalog.subtitle': 'Artisanal joinery and noble minerals curated for refined architectural spaces.',
-    'cart.title': 'Purchase Selection',
-    'cart.empty': 'Your purchase selection is currently empty.',
-    'checkout.title': 'Order Checkout',
-    'showrooms.title': 'Showroom Network & Galleries',
-    'management.title': 'Curatorial Inventory Management',
-    'dashboard.title': 'B2B Executive & Atelier Dashboard'
-  }
-};
-
+const RATES_CACHE_KEY = 'eden_exchange_rates_v1';
+const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 const LocalizationContext = createContext<LocalizationContextType | undefined>(undefined);
+
+function readCachedRates(): { rates: ExchangeRates; updatedAt: number } | null {
+  try {
+    const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY) || 'null') as { rates?: ExchangeRates; updatedAt?: number } | null;
+    if (!cached?.rates?.MZN || !cached.updatedAt) return null;
+    return { rates: cached.rates, updatedAt: cached.updatedAt };
+  } catch {
+    localStorage.removeItem(RATES_CACHE_KEY);
+    return null;
+  }
+}
 
 export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currency, setCurrencyState] = useState<Currency>(() => {
-    return (localStorage.getItem('aethel_currency') as Currency) || 'MZN';
+    const saved = localStorage.getItem('aethel_currency');
+    return saved === 'USD' || saved === 'EUR' ? saved : 'MZN';
   });
+  const [lang, setLangState] = useState<Language>(() => localStorage.getItem('aethel_lang') === 'EN' ? 'EN' : 'PT');
+  const cached = useMemo(readCachedRates, []);
+  const [rates, setRates] = useState<ExchangeRates>(cached?.rates ?? { MZN: 1 });
+  const [ratesUpdatedAt, setRatesUpdatedAt] = useState<Date | null>(cached ? new Date(cached.updatedAt) : null);
+  const [ratesLoading, setRatesLoading] = useState(true);
+  const [rateError, setRateError] = useState<string | null>(null);
+  const [translationError, setTranslationError] = useState<string | null>(null);
 
-  const [lang, setLangState] = useState<Language>(() => {
-    return (localStorage.getItem('aethel_lang') as Language) || 'PT';
-  });
+  useEffect(() => {
+    const abort = new AbortController();
+    const cacheIsFresh = cached && Date.now() - cached.updatedAt < TWELVE_HOURS;
+    if (cacheIsFresh) setRatesLoading(false);
 
-  const setCurrency = (c: Currency) => {
-    setCurrencyState(c);
-    localStorage.setItem('aethel_currency', c);
-  };
+    void fetch('https://open.er-api.com/v6/latest/MZN', { signal: abort.signal, headers: { Accept: 'application/json' } })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Serviço cambial indisponível (${response.status}).`);
+        const payload = await response.json() as {
+          result?: string;
+          time_last_update_unix?: number;
+          rates?: Record<string, number>;
+        };
+        if (payload.result !== 'success' || !payload.rates?.USD || !payload.rates?.EUR) {
+          throw new Error('O serviço cambial não retornou taxas válidas.');
+        }
+        const nextRates: ExchangeRates = { MZN: 1, USD: payload.rates.USD, EUR: payload.rates.EUR };
+        const updatedAt = (payload.time_last_update_unix ?? Math.floor(Date.now() / 1000)) * 1000;
+        setRates(nextRates);
+        setRatesUpdatedAt(new Date(updatedAt));
+        setRateError(null);
+        localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({ rates: nextRates, updatedAt }));
+      })
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+        if (!cached) setRateError(error instanceof Error ? error.message : 'Não foi possível atualizar as taxas cambiais.');
+      })
+      .finally(() => setRatesLoading(false));
+    return () => abort.abort();
+  }, [cached]);
 
-  const setLang = (l: Language) => {
-    setLangState(l);
-    localStorage.setItem('aethel_lang', l);
-  };
+  useEffect(() => {
+    setTranslationError(null);
+    return activateAutomaticTranslation(lang, setTranslationError);
+  }, [lang]);
 
-  const formatPrice = (amountInMZN: number): string => {
-    if (currency === 'USD') {
-      const usd = Math.round(amountInMZN / 64);
-      return `$${usd.toLocaleString('en-US')} USD`;
-    }
-    if (currency === 'EUR') {
-      const eur = Math.round(amountInMZN / 70);
-      return `€${eur.toLocaleString('de-DE')} EUR`;
-    }
-    return `${Math.round(amountInMZN).toLocaleString('pt-MZ')} MT`;
-  };
+  const setCurrency = useCallback((nextCurrency: Currency) => {
+    setCurrencyState(nextCurrency);
+    localStorage.setItem('aethel_currency', nextCurrency);
+  }, []);
 
-  const t = (key: string, fallback?: string): string => {
-    const table = DICTIONARY[lang] || DICTIONARY.PT;
-    return table[key] || fallback || key;
-  };
+  const setLang = useCallback((nextLanguage: Language) => {
+    setLangState(nextLanguage);
+    localStorage.setItem('aethel_lang', nextLanguage);
+  }, []);
+
+  const formatPrice = useCallback((amountInMZN: number) => {
+    const rate = rates[currency];
+    if (!rate) return `— ${currency}`;
+    const converted = amountInMZN * rate;
+    const value = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: currency === 'MZN' ? 0 : 2,
+      maximumFractionDigits: currency === 'MZN' ? 0 : 2
+    }).format(converted);
+    return `${value} ${currency}`;
+  }, [currency, lang, rates]);
+
+  const convertFromMzn = useCallback((amountInMZN: number) => amountInMZN * (rates[currency] ?? 0), [currency, rates]);
+  const convertToMzn = useCallback((amount: number) => {
+    const rate = rates[currency];
+    return rate ? amount / rate : 0;
+  }, [currency, rates]);
+
+  const getExchangeLabel = useCallback((base: Currency, target: Currency) => {
+    const baseRate = rates[base];
+    const targetRate = rates[target];
+    if (!baseRate || !targetRate) return `1 ${base} = — ${target}`;
+    const value = targetRate / baseRate;
+    const digits = value < 0.1 ? 4 : 2;
+    return `1 ${base} = ${value.toLocaleString(lang === 'EN' ? 'en-US' : 'pt-MZ', { maximumFractionDigits: digits })} ${target}`;
+  }, [lang, rates]);
+
+  const t = useCallback((key: string, fallback?: string) => fallback || key, []);
 
   return (
-    <LocalizationContext.Provider
-      value={{
-        currency,
-        setCurrency,
-        lang,
-        setLang,
-        formatPrice,
-        t
-      }}
-    >
+    <LocalizationContext.Provider value={{
+      currency,
+      setCurrency,
+      lang,
+      setLang,
+      formatPrice,
+      convertFromMzn,
+      convertToMzn,
+      getExchangeLabel,
+      ratesLoading,
+      ratesUpdatedAt,
+      rateError,
+      translationError,
+      t
+    }}>
       {children}
     </LocalizationContext.Provider>
   );
 };
 
-export const useLocalization = () => {
-  const ctx = useContext(LocalizationContext);
-  if (!ctx) {
-    throw new Error('useLocalization must be used within LocalizationProvider');
-  }
-  return ctx;
-};
+export function useLocalization() {
+  const context = useContext(LocalizationContext);
+  if (!context) throw new Error('useLocalization must be used within LocalizationProvider');
+  return context;
+}

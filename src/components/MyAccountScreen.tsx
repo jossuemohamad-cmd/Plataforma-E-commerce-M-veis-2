@@ -57,7 +57,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
             Início
           </button>
           <span>/</span>
-          <span className="text-[#1a1c1b] font-medium">Área Exclusiva VIP</span>
+          <span className="text-[#1a1c1b] font-medium">Minha conta</span>
         </nav>
 
         {/* ==========================================
@@ -74,17 +74,17 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span className="px-2.5 py-0.5 bg-[#fec9ae] text-[#79523e] font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-wider">
-                    {user?.role === 'admin' ? 'Acesso Master • Administrador' : user?.membershipLevel || 'Membro Aethel Partners • Nível Platina'}
+                    {user?.accountType === 'architect' ? 'Conta profissional / B2B' : 'Conta residencial'}
                   </span>
                   <span className="font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f] font-mono">
-                    ID: {user?.id ? user.id.toUpperCase() : 'MZ-8921'}
+                    ID: {user?.id ? user.id.slice(0, 8).toUpperCase() : '—'}
                   </span>
                 </div>
-                <h1 className="font-['Playfair_Display'] text-2xl sm:text-3xl text-[#1a1c1b] font-normal">
-                  {user?.name || 'Arq. Beatriz Mendes'}
+                <h1 translate="no" className="font-['Playfair_Display'] text-2xl sm:text-3xl text-[#1a1c1b] font-normal">
+                  {user?.name || 'Cliente Eden'}
                 </h1>
-                <p className="font-['Plus_Jakarta_Sans'] text-xs text-[#4a4640] mt-0.5">
-                  {user?.firmName || 'Atelier de Arquitetura & Interiores Lda'} • {user?.email || 'beatriz.mendes@arquitetura.co.mz'}
+                <p translate="no" className="font-['Plus_Jakarta_Sans'] text-xs text-[#4a4640] mt-0.5">
+                  {user?.firmName ? `${user.firmName} • ` : ''}{user?.email || ''}
                 </p>
               </div>
             </div>
@@ -120,7 +120,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                 Investimento Acumulado
               </span>
               <span className="font-['Playfair_Display'] text-2xl text-[#1a1c1b] font-normal mt-0.5 block">
-                412.500 MT
+                {formatPrice(orders.reduce((sum, item) => sum + item.total, 0))}
               </span>
             </div>
             <div>
@@ -196,13 +196,13 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                     </span>
                   </div>
                   <h3 className="font-['Playfair_Display'] text-xl text-[#1a1c1b] font-normal mt-1">
-                    Lote Residencial Polana Cimento
+                    {orders.length ? 'Acompanhamento da encomenda' : 'Ainda não existem encomendas'}
                   </h3>
                 </div>
 
                 <div className="text-right">
                   <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase text-[#7c766f] block">
-                    Entrega Prevista Luva Branca:
+                    Entrega prevista:
                   </span>
                   <span className="font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#1a1c1b]">
                     {order.estimatedDelivery}
@@ -327,30 +327,30 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
                   Atendimento Exclusivo
                 </span>
                 <h4 className="font-['Playfair_Display'] text-xl text-[#1a1c1b] font-normal mb-3">
-                  Concierge Dedicado ao Atelier
+                  Apoio ao cliente Eden
                 </h4>
 
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-[#efeeec] flex items-center justify-center text-[#7d5540] font-bold">
-                    RM
+                    ED
                   </div>
                   <div className="font-['Plus_Jakarta_Sans']">
-                    <span className="text-xs font-bold text-[#1a1c1b] block">Eng. Rui Matsinhe</span>
-                    <span className="text-[11px] text-[#7c766f]">Curador Técnico & Gestão de Obras</span>
+                    <span className="text-xs font-bold text-[#1a1c1b] block">Equipa Eden</span>
+                    <span className="text-[11px] text-[#7c766f]">Vendas a retalho</span>
                   </div>
                 </div>
 
                 <p className="font-['Plus_Jakarta_Sans'] text-xs text-[#4a4640] leading-relaxed mb-4">
-                  Disponível para emissão de relatórios de produção, ensaios estruturais ou alinhamentos logísticos especiais no canteiro de obras.
+                  Contacte a equipa para esclarecer dúvidas sobre a sua conta, produtos ou encomendas.
                 </p>
 
                 <div className="space-y-2 font-['Plus_Jakarta_Sans'] text-xs">
                   <a
-                    href="tel:+258840009200"
+                    href="tel:+258870003388"
                     className="w-full py-2.5 bg-black text-white hover:bg-[#7d5540] font-semibold flex items-center justify-center gap-2 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[16px]">call</span>
-                    <span>Ligar: +258 84 000 9200</span>
+                    <span>Ligar: +258 87 000 3388</span>
                   </a>
                   <button
                     onClick={() => void requestConcierge('Contacto Concierge', 'Solicito contacto do Concierge sobre a minha conta e encomendas.')}

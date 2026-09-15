@@ -1,44 +1,44 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-headline: "Playfair Display", Georgia, serif;
-  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Montserrat", Arial, sans-serif;
+  --font-headline: "Montserrat", Arial, sans-serif;
+  --font-body: "Poppins", Arial, sans-serif;
 
-  --color-surface: #faf9f7;
-  --color-surface-dim: #dadad8;
-  --color-surface-bright: #faf9f7;
+  --color-surface: #ffffff;
+  --color-surface-dim: #e5e5e5;
+  --color-surface-bright: #ffffff;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f4f3f1;
-  --color-surface-container: #efeeec;
-  --color-surface-container-high: #e9e8e6;
-  --color-surface-container-highest: #e3e2e0;
-  --color-on-surface: #1a1c1b;
-  --color-on-surface-variant: #4a4640;
+  --color-surface-container-low: #ffffff;
+  --color-surface-container: #f4f4f4;
+  --color-surface-container-high: #eeeeee;
+  --color-surface-container-highest: #e5e5e5;
+  --color-on-surface: #000000;
+  --color-on-surface-variant: #132240;
   --color-inverse-surface: #2f3130;
   --color-inverse-on-surface: #f1f1ef;
-  --color-outline: #7c766f;
-  --color-outline-variant: #cdc5bd;
-  --color-primary: #000000;
+  --color-outline: #667085;
+  --color-outline-variant: #d8d8d8;
+  --color-primary: #132240;
   --color-on-primary: #ffffff;
-  --color-primary-container: #1c1b1a;
-  --color-on-primary-container: #868381;
-  --color-secondary: #7d5540;
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #fec9ae;
-  --color-on-secondary-container: #79523e;
-  --color-secondary-fixed: #ffdbca;
-  --color-secondary-fixed-dim: #efbca1;
-  --color-on-secondary-fixed: #2f1405;
-  --color-background: #faf9f7;
-  --color-on-background: #1a1c1b;
+  --color-primary-container: #132240;
+  --color-on-primary-container: #ffffff;
+  --color-secondary: #fdcb00;
+  --color-on-secondary: #132240;
+  --color-secondary-container: #fff3b5;
+  --color-on-secondary-container: #132240;
+  --color-secondary-fixed: #fdcb00;
+  --color-secondary-fixed-dim: #f4cd24;
+  --color-on-secondary-fixed: #132240;
+  --color-background: #ffffff;
+  --color-on-background: #000000;
 }
 
 @layer base {
   body {
     font-family: var(--font-body);
-    color: #1a1c1b;
-    background-color: #faf9f7;
+    color: #000000;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
     min-width: 320px;
@@ -62,6 +62,241 @@
   [role='button'] {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Compatibilidade visual para componentes anteriores à identidade oficial Eden. */
+.text-\[\#7d5540\] { color: #132240 !important; }
+.bg-\[\#7d5540\] { background-color: #132240 !important; }
+.border-\[\#7d5540\] { border-color: #132240 !important; }
+.hover\:bg-\[\#7d5540\]:hover { background-color: #132240 !important; }
+.hover\:text-\[\#7d5540\]:hover { color: #132240 !important; }
+.text-\[\#fec9ae\], .text-\[\#efbca1\] { color: #fdcb00 !important; }
+.bg-\[\#fec9ae\], .bg-\[\#efbca1\] { background-color: #fdcb00 !important; }
+.text-\[\#1a1c1b\] { color: #000000 !important; }
+.text-\[\#4a4640\] { color: #000000 !important; }
+.text-\[\#7c766f\], .text-\[\#005EA4\] { color: #132240 !important; }
+.bg-\[\#005EA4\] { background-color: #132240 !important; color: #ffffff !important; }
+.border-\[\#005EA4\] { border-color: #132240 !important; }
+.hover\:bg-\[\#005EA4\]:hover { background-color: #132240 !important; }
+.hover\:text-\[\#005EA4\]:hover { color: #132240 !important; }
+.focus\:border-\[\#005EA4\]:focus { border-color: #132240 !important; }
+.bg-\[\#faf9f7\] { background-color: #ffffff !important; }
+.bg-\[\#f5faff\] { background-color: #ffffff !important; }
+.bg-\[\#f4f3f1\] { background-color: #f4f4f4 !important; }
+.bg-\[\#efeeec\] { background-color: #eeeeee !important; }
+.bg-\[\#e9e8e6\] { background-color: #e5e5e5 !important; }
+.border-\[\#e9e8e6\] { border-color: #dedede !important; }
+.border-\[\#cdc5bd\] { border-color: #d0d0d0 !important; }
+.bg-black { background-color: #132240 !important; }
+.text-black { color: #000000 !important; }
+.border-black { border-color: #000000 !important; }
+.hover\:bg-black:hover { background-color: #132240 !important; }
+.hover\:text-black:hover { color: #000000 !important; }
+
+/* Botões preenchidos: amarelo Eden, texto e ícones pretos. */
+button.bg-black,
+button.bg-\[\#7d5540\],
+button.bg-\[\#005EA4\],
+button.bg-\[\#132240\],
+button.bg-\[\#FDCB00\],
+a.bg-black,
+a.bg-\[\#7d5540\],
+a.bg-\[\#005EA4\],
+a.bg-\[\#132240\],
+a.bg-\[\#FDCB00\] {
+  background-color: #fdcb00 !important;
+  border-color: #fdcb00 !important;
+  color: #000000 !important;
+}
+
+button.bg-black *,
+button.bg-\[\#7d5540\] *,
+button.bg-\[\#005EA4\] *,
+button.bg-\[\#132240\] *,
+button.bg-\[\#FDCB00\] *,
+a.bg-black *,
+a.bg-\[\#7d5540\] *,
+a.bg-\[\#005EA4\] *,
+a.bg-\[\#132240\] *,
+a.bg-\[\#FDCB00\] * {
+  color: #000000 !important;
+}
+
+button.bg-black:hover,
+button.bg-\[\#7d5540\]:hover,
+button.bg-\[\#005EA4\]:hover,
+button.bg-\[\#132240\]:hover,
+button.bg-\[\#FDCB00\]:hover,
+a.bg-black:hover,
+a.bg-\[\#7d5540\]:hover,
+a.bg-\[\#005EA4\]:hover,
+a.bg-\[\#132240\]:hover,
+a.bg-\[\#FDCB00\]:hover {
+  background-color: #e8ba00 !important;
+}
+
+/* A tipografia nova preserva as classes existentes e evita alterações de layout em massa. */
+.font-\[\'Playfair_Display\'\] {
+  font-family: "Montserrat", Arial, sans-serif !important;
+}
+
+.font-\[\'Plus_Jakarta_Sans\'\] {
+  font-family: "Poppins", Arial, sans-serif !important;
+}
+
+[class*="Playfair_Display"] {
+  font-family: "Montserrat", Arial, sans-serif !important;
+}
+
+[class*="Plus_Jakarta_Sans"] {
+  font-family: "Poppins", Arial, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", Arial, sans-serif;
+  color: #000000;
+  font-weight: 700 !important;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  line-height: 1.1;
+}
+
+p, a, button, label, input, select, textarea {
+  overflow-wrap: break-word;
+}
+
+.eden-footer,
+.eden-footer > div {
+  background-color: #132240 !important;
+  color: #ffffff !important;
+}
+
+.eden-footer {
+  border-top: 4px solid #fdcb00 !important;
+}
+
+.eden-footer *:not(input) {
+  color: #ffffff !important;
+  border-color: rgb(255 255 255 / 22%);
+}
+
+.eden-footer img {
+  filter: brightness(0) invert(1);
+}
+
+.eden-footer input {
+  color: #132240 !important;
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.eden-footer button[type='submit'] {
+  color: #132240 !important;
+  background-color: #fdcb00 !important;
+  border-color: #fdcb00 !important;
+}
+
+.eden-footer button[type='submit']:hover {
+  background-color: #f4cd24 !important;
+}
+
+.eden-footer h1,
+.eden-footer h2,
+.eden-footer h3,
+.eden-footer h4,
+.eden-footer h5,
+.eden-footer h6 {
+  color: #fdcb00 !important;
+}
+
+/* Contraste previsível em painéis escuros e sobre imagens. */
+.eden-dark-surface,
+.eden-dark-surface h1,
+.eden-dark-surface h2,
+.eden-dark-surface h3,
+.eden-dark-surface h4,
+.eden-dark-surface h5,
+.eden-dark-surface h6,
+.eden-dark-surface p,
+.eden-dark-surface a,
+.eden-dark-surface label {
+  color: #ffffff !important;
+}
+
+.eden-dark-surface .material-symbols-outlined {
+  color: #ffffff;
+}
+
+.eden-dark-surface button.bg-white,
+.eden-dark-surface button.bg-white .material-symbols-outlined {
+  color: #000000 !important;
+}
+
+.eden-dark-surface .eden-accent-text {
+  color: #fdcb00 !important;
+}
+
+/* Cartões e blocos de conteúdo seguem o mesmo raio da identidade visual. */
+.eden-card,
+article {
+  border-radius: 10px;
+}
+
+.eden-card {
+  overflow: hidden;
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ícones pretos em superfícies claras; exceções explícitas para áreas escuras. */
+.material-symbols-outlined {
+  color: #000000;
+}
+
+.eden-ticker-bar .material-symbols-outlined,
+.eden-footer .material-symbols-outlined,
+[class*="bg-black/"] .material-symbols-outlined {
+  color: #ffffff;
+}
+
+@keyframes eden-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.eden-ticker-track {
+  animation: eden-ticker-scroll 42s linear infinite;
+  will-change: transform;
+}
+
+.eden-ticker:hover .eden-ticker-track,
+.eden-ticker:focus-within .eden-ticker-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eden-ticker-track {
+    animation: none;
+    transform: none;
+  }
+
+  .eden-ticker-group[aria-hidden='true'] {
+    display: none;
   }
 }
 

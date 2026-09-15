@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { ActiveScreen, Product, CartItem } from './types';
 import { AETHEL_PRODUCTS } from './data/aethelData';
 
@@ -8,7 +8,6 @@ import { useAuth } from './context/AuthContext';
 import { isSupabaseConfigured } from './lib/supabase';
 import { listProducts } from './services/catalogService';
 import { loadCart, loadFavoriteIds, placeOrder, saveCart, setFavorite } from './services/commerceService';
-import { deleteProduct, saveProduct } from './services/adminService';
 import { cartItemKey, clampQuantity } from './lib/commerce.js';
 
 import { Navbar } from './components/Navbar';
@@ -20,12 +19,13 @@ import { CheckoutScreen } from './components/CheckoutScreen';
 import { AuthScreen } from './components/AuthScreen';
 import { MyAccountScreen } from './components/MyAccountScreen';
 import { ShowroomsScreen } from './components/ShowroomsScreen';
-import { ManagementScreen } from './components/ManagementScreen';
-import { DashboardScreen } from './components/DashboardScreen';
+import { EdenInfoScreen } from './components/EdenInfoScreen';
 import { CartDrawer } from './components/CartDrawer';
 
+const AdminPortal = lazy(() => import('./components/AdminPortal'));
+
 function AppContent() {
-  const { user, loading: authLoading, isAdmin } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   // Navigation State
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('home');
 
@@ -133,11 +133,7 @@ function AppContent() {
 
   // Handlers
   const handleNavigate = (screen: ActiveScreen) => {
-    if ((screen === 'gestao' || screen === 'dashboard') && !isAdmin) {
-      showToast('Esta área é exclusiva para administradores.');
-      setActiveScreen(user ? 'home' : 'autenticacao');
-      return;
-    }
+    if (screen === 'gestao' || screen === 'dashboard' || screen === 'administracao') return;
     if ((screen === 'minha-conta' || screen === 'checkout') && !user) {
       if (screen === 'checkout') showToast('Inicie sessão para concluir o pedido. O carrinho será preservado.');
       setActiveScreen('autenticacao');
@@ -256,25 +252,6 @@ function AppContent() {
     }
   };
 
-  // Product Management Handlers
-  const handleAddProduct = async (newProd: Product) => {
-    await saveProduct(newProd);
-    setProducts(await listProducts());
-    showToast(`"${newProd.title}" registrada com sucesso no acervo!`);
-  };
-
-  const handleUpdateProduct = async (updatedProd: Product) => {
-    await saveProduct(updatedProd);
-    setProducts(await listProducts());
-    showToast(`"${updatedProd.title}" atualizada.`);
-  };
-
-  const handleDeleteProduct = async (productId: string) => {
-    await deleteProduct(productId);
-    setProducts(await listProducts());
-    showToast('Peça removida do acervo.');
-  };
-
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   if (catalogLoading || authLoading) {
@@ -313,6 +290,12 @@ function AppContent() {
             onNavigate={handleNavigate}
           />
         )}
+
+        {activeScreen === 'sobre' && <EdenInfoScreen mode="sobre" onNavigate={handleNavigate} />}
+
+        {activeScreen === 'colecoes' && <EdenInfoScreen mode="colecoes" onNavigate={handleNavigate} />}
+
+        {activeScreen === 'contacto' && <EdenInfoScreen mode="contacto" onNavigate={handleNavigate} />}
 
         {activeScreen === 'catalogo' && (
           <CatalogScreen
@@ -364,23 +347,10 @@ function AppContent() {
           <ShowroomsScreen onNavigate={handleNavigate} />
         )}
 
-        {activeScreen === 'gestao' && (
-          <ManagementScreen
-            products={products}
-            onAddProduct={handleAddProduct}
-            onUpdateProduct={handleUpdateProduct}
-            onDeleteProduct={handleDeleteProduct}
-            onNavigate={handleNavigate}
-          />
-        )}
-
-        {activeScreen === 'dashboard' && (
-          <DashboardScreen onNavigate={handleNavigate} />
-        )}
       </main>
 
       {/* Rodapé Curatorial */}
-      <Footer onNavigate={handleNavigate} />
+      {activeScreen !== 'autenticacao' && <Footer onNavigate={handleNavigate} />}
 
       {/* Gaveta Lateral de Caderno de Compras (CartDrawer) */}
       <CartDrawer
@@ -409,10 +379,15 @@ function AppContent() {
 }
 
 export default function App() {
+  const isAdminRoute = window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/');
   return (
     <LocalizationProvider>
       <AuthProvider>
-        <AppContent />
+        {isAdminRoute ? (
+          <Suspense fallback={<div className="min-h-screen bg-[#132240] text-white grid place-items-center">A abrir administração…</div>}>
+            <AdminPortal />
+          </Suspense>
+        ) : <AppContent />}
       </AuthProvider>
     </LocalizationProvider>
   );

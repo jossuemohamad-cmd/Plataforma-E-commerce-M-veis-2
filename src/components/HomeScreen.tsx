@@ -23,6 +23,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 }) => {
   const { formatPrice, t } = useLocalization();
   const products = propProducts || propFeaturedProducts || [];
+  const nuvolaProduct = products.find((product) => product.id === 'sof-nuvola');
+  const monolitoProduct = products.find((product) => product.id === 'mes-monolito');
+  const kyotoProduct = products.find((product) => product.id === 'pol-kyoto');
+  const verticeProduct = products.find((product) => product.id === 'lum-vertice');
 
   // Highlighted filter tab
   const [activeFilterTab, setActiveFilterTab] = useState('Todos');
@@ -56,16 +60,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ==========================================
           1. HERO SECTION ARQUITETÔNICO (100vh Full Viewport)
           ========================================== */}
-      <section className="relative w-full min-h-[100svh] sm:min-h-[660px] lg:h-screen flex items-end pb-8 sm:pb-16 pt-[104px] sm:pt-[116px] overflow-hidden bg-black text-white">
+      <section className="home-hero eden-dark-surface relative w-full min-h-[100svh] sm:min-h-[660px] lg:h-screen flex items-end pb-8 sm:pb-16 pt-[104px] sm:pt-[116px] overflow-hidden bg-[#132240] text-white">
         {/* Imagem de Fundo com Scrim Editorial Escuro */}
         <div className="absolute inset-0 z-0">
           <img
-            alt="Living room de alto padrão Aethel Studio"
+            alt="Sala de estar Eden"
             className="w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000 ease-out"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt1H6nSKFrcVw1WThChsR6VGmFhmjmgmFStgpYIfzykfsGxBt3mOtruzm5g2f2yRgEnmcXNh0pGEwgm-k3Pqq1zcb_3kZKnk8qv21q_5GquxCuIrc6LhWrFRSI9wlYUz8MuAvdhJLY6wdX6kV18dGfL6ptsZbdFq61DXJEv_rQXH6NadUGxsuUNiJJIPyxlcRRkcszXh1OwyD8OG5-bQ5HnhyIe4Fy1ZnP3jlGKxKvJajZDW850Mnjlw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent"></div>
         </div>
 
         {/* Conteúdo do Hero */}
@@ -80,7 +84,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </span>
               </div>
 
-              <h1 className="font-['Playfair_Display'] text-3xl sm:text-4xl lg:text-[58px] text-white font-normal tracking-tight leading-[1.08] max-w-3xl">
+              <h1 className="font-['Playfair_Display'] text-3xl sm:text-4xl lg:text-[58px] text-white font-bold tracking-tight leading-[1.08] max-w-3xl">
                 {t('hero.title', 'Mobiliário Autoral Onde a Nobreza da Madeira Encontra a Pureza das Formas')}
               </h1>
 
@@ -92,7 +96,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 mt-7 pt-1 w-full sm:w-auto">
                 <button
                   onClick={() => onNavigate('catalogo')}
-                  className="inline-flex items-center justify-center w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-[#faf9f7] text-black font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-[#ffdbca] transition-colors"
+                  className="inline-flex h-12 items-center justify-center w-full sm:w-auto px-8 bg-[#FDCB00] text-black font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-[#e8ba00] transition-colors"
                 >
                   {t('hero.cta_explore', 'Explorar Coleção')}
                 </button>
@@ -100,7 +104,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   onClick={() => {
                     document.getElementById('showroom-interativo')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 sm:px-7 py-3.5 sm:py-4 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors"
+                  className="inline-flex h-12 items-center justify-center gap-2 w-full sm:w-auto px-8 bg-white hover:bg-[#FDCB00] text-black font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px]">view_in_ar</span>
                   {t('hero.cta_virtual', 'Visitar Showroom Virtual')}
@@ -141,7 +145,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <section className="w-full bg-[#f4f3f1] py-8 border-b border-[#e9e8e6]">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="flex items-start gap-4 p-2">
+            <div className="eden-card flex items-start gap-4 p-4 bg-white">
               <div className="w-11 h-11 shrink-0 flex items-center justify-center bg-white text-black shadow-xs">
                 <span className="material-symbols-outlined text-[24px]">forest</span>
               </div>
@@ -155,7 +159,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-2">
+            <div className="eden-card flex items-start gap-4 p-4 bg-white">
               <div className="w-11 h-11 shrink-0 flex items-center justify-center bg-white text-black shadow-xs">
                 <span className="material-symbols-outlined text-[24px]">front_hand</span>
               </div>
@@ -169,7 +173,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-2">
+            <div className="eden-card flex items-start gap-4 p-4 bg-white">
               <div className="w-11 h-11 shrink-0 flex items-center justify-center bg-white text-black shadow-xs">
                 <span className="material-symbols-outlined text-[24px]">verified</span>
               </div>
@@ -183,7 +187,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-2">
+            <div className="eden-card flex items-start gap-4 p-4 bg-white">
               <div className="w-11 h-11 shrink-0 flex items-center justify-center bg-white text-black shadow-xs">
                 <span className="material-symbols-outlined text-[24px]">architecture</span>
               </div>
@@ -231,10 +235,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 1. Sala de Estar (7 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-7 h-[320px] sm:h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
+              className="eden-card eden-dark-surface group relative md:col-span-7 h-[320px] sm:h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
-                alt="Sala de Estar Contemporânea Aethel"
+                alt="Sala de estar contemporânea Eden"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKwGw_hKxPRIHrB5wQIDHLJnspmVCf5_sGGsrvN4DVrNqcQCvaVVK2zjhgtneEzwDEoeZsQkK4wt75P-URcj2QinMe59ldXZeK506xjspAm2KP3qT4R-0HT4yFdO5VHDCLJfGplX8a0cu4FTz0dcGe5sAXzLv7kEtgeNAPY2G2LN9sLMSBahnBlx84cyalZ5M9JpOyTvKxvbgn86MF0Ve2xmoFAMjLS50a1T2HVgLsxMwEhTJzaIfSqw"
               />
@@ -255,7 +259,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 2. Sala de Jantar (5 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-5 h-[320px] sm:h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
+              className="eden-card eden-dark-surface group relative md:col-span-5 h-[320px] sm:h-[440px] lg:h-[520px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Sala de Jantar & Banquete"
@@ -279,7 +283,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 3. Quarto & Suíte (4 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-4 h-[300px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
+              className="eden-card eden-dark-surface group relative md:col-span-4 h-[300px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Quarto & Suíte Master"
@@ -300,7 +304,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* 4. Escritório Executivo (4 cols) */}
             <div
               onClick={() => onNavigate('catalogo')}
-              className="group relative md:col-span-4 h-[300px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
+              className="eden-card eden-dark-surface group relative md:col-span-4 h-[300px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-8 cursor-pointer"
             >
               <img
                 alt="Escritório Executivo"
@@ -322,7 +326,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:col-span-4 gap-6">
               <div
                 onClick={() => onNavigate('catalogo')}
-                className="group relative h-[280px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-6 cursor-pointer"
+                className="eden-card eden-dark-surface group relative h-[280px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-6 cursor-pointer"
               >
                 <img
                   alt="Cozinha & Gourmet Integrada"
@@ -342,7 +346,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
               <div
                 onClick={() => onNavigate('catalogo')}
-                className="group relative h-[280px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-6 cursor-pointer"
+                className="eden-card eden-dark-surface group relative h-[280px] sm:h-[360px] overflow-hidden bg-[#efeeec] flex flex-col justify-end p-5 sm:p-6 cursor-pointer"
               >
                 <img
                   alt="Área Externa & Varanda"
@@ -387,16 +391,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={() => onNavigate('showrooms')}
               className="inline-flex items-center gap-2 text-[#1a1c1b] hover:text-[#7d5540] font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-[0.14em] font-semibold transition-colors"
             >
-              <span>Ver todos os 4 Showrooms Virtuais</span>
+                <span>Conhecer as 3 sucursais</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </button>
           </div>
 
           {/* Canvas do Showroom Interativo com Hotspots Reais */}
-          <div className="relative w-full h-[620px] sm:h-auto sm:aspect-[16/9] lg:aspect-[21/10] bg-[#efeeec] overflow-hidden shadow-2xl">
+          <div className="eden-card relative w-full h-[620px] sm:h-auto sm:aspect-[16/9] lg:aspect-[21/10] bg-[#efeeec] overflow-hidden shadow-2xl">
             {/* Foto Base do Ambiente em Alta Resolução */}
             <img
-              alt="Living Contemporâneo Nuvola - Showroom Aethel"
+              alt="Sala contemporânea Eden"
               className="w-full h-full object-cover object-center"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzNcLdHwhRYLwhV_sQdb-H0QSgf2N-NdsdwANIi8PaQ_vPEJv0eoLsT_pHp1UUUUzd_G9o7cfCklPK6lASCQTYYwx5ZlXHfMUhDlan5y-HtNVxQigHgeO8b5_KNZun7l4zJSrFUWncoov71lMkWJ4BX_pSFA_iyARj1nV3cFCz8pkZtDlucLiHlMUVNeUpOtCgmyWbOtsFrRTep2vEnHDRLQtkCAcHVhp-6xmrlP-3K__yD3tPGdlkTg"
             />
@@ -441,10 +445,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   </div>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="font-['Playfair_Display'] text-xl font-normal text-[#1a1c1b]">
-                      79.900 MT
+                      {formatPrice(nuvolaProduct?.price ?? 0)}
                     </span>
                     <span className="font-['Plus_Jakarta_Sans'] text-xs line-through text-[#7c766f]">
-                      89.500 MT
+                      {nuvolaProduct?.originalPrice ? formatPrice(nuvolaProduct.originalPrice) : null}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-3 pt-1">
@@ -495,7 +499,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   Mármore Travertino Navona
                 </span>
                 <span className="font-['Playfair_Display'] text-base text-[#1a1c1b] mt-1 font-normal">
-                  36.500 MT
+                  {formatPrice(monolitoProduct?.price ?? 0)}
                 </span>
               </div>
             </div>
@@ -523,7 +527,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   Carvalho Maciço & Bouclé
                 </span>
                 <span className="font-['Playfair_Display'] text-base text-[#1a1c1b] mt-1 font-normal">
-                  38.400 MT
+                  {formatPrice(kyotoProduct?.price ?? 0)}
                 </span>
               </div>
             </div>
@@ -551,7 +555,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   Latão Escovado & Cúpula Seda
                 </span>
                 <span className="font-['Playfair_Display'] text-base text-[#1a1c1b] mt-1 font-normal">
-                  16.800 MT
+                  {formatPrice(verticeProduct?.price ?? 0)}
                 </span>
               </div>
             </div>
@@ -573,10 +577,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="flex items-center justify-between w-full sm:w-auto gap-4">
                   <div className="text-right">
                     <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-wider text-[#7d5540] font-bold block">
-                      Economize 10.000 MT
+                      Economize {formatPrice(10000)}
                     </span>
                     <span className="font-['Playfair_Display'] text-xl font-normal text-[#1a1c1b]">
-                      171.600 MT
+                      {formatPrice(
+                        (nuvolaProduct?.price ?? 0) +
+                        (monolitoProduct?.price ?? 0) +
+                        (kyotoProduct?.price ?? 0) +
+                        (verticeProduct?.price ?? 0) - 10000
+                      )}
                     </span>
                   </div>
                   <button
@@ -631,7 +640,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={cat.title}
                 onClick={() => onNavigate('catalogo')}
-                className="group flex flex-col items-center text-center p-4 sm:p-6 bg-[#f4f3f1] hover:bg-[#efeeec] transition-colors cursor-pointer border border-[#e9e8e6]"
+                className="eden-card group flex flex-col items-center text-center p-4 sm:p-6 bg-[#f4f3f1] hover:bg-[#efeeec] transition-colors cursor-pointer border border-[#e9e8e6]"
               >
                 <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-[#1a1c1b] group-hover:text-[#7d5540] group-hover:scale-110 transition-all mb-3 shadow-xs">
                   <span className="material-symbols-outlined text-[32px]">{cat.icon}</span>
@@ -777,20 +786,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ==========================================
           7. BANNER EDITORIAL SHOWROOM FÍSICO & B2B
           ========================================== */}
-      <section className="w-full py-16 lg:py-20 bg-[#1c1b1a] text-white">
+      <section className="eden-dark-surface w-full py-16 lg:py-20 bg-[#132240] text-white">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Imagem do Ateliê / Studio de Arquitetura */}
-            <div className="lg:col-span-6 relative aspect-[16/11] overflow-hidden shadow-2xl">
+            <div className="eden-card lg:col-span-6 relative aspect-[16/11] overflow-hidden shadow-2xl">
               <img
-                alt="Estúdio de Projetos Arquitetônicos Aethel"
+                alt="Atendimento personalizado Eden"
                 className="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhLlqgo3Z6Tpg1ioE_TBD6ATVxCZkqubNx0nSPWoyJRF_3EyeddV_CnxHgXUhux-YLBpCE9ZO9JuOYquZRmcfoWZCPInA9mta6uh2uiFFI3iUqe5WFqyvGG0Z8dXVwQ6EK0hsBdEyZcOaO1lvxDKSlINCRVSS8GG6Npoe-AUmUOAKdNuhAScY1OVy4y7WHmQG8jnA35FAiG6EFB2YbBGSLTgNMzvwZ7FDmYH4wI68d6GCxVv3SH-sdcA"
               />
               <div className="absolute inset-0 bg-black/20"></div>
               <div className="absolute bottom-4 left-4 p-3 bg-white/10 backdrop-blur-md border border-white/10">
                 <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-widest text-white font-bold">
-                  Pavilhão Aethel • Polana Cimento
+                  Eden • Tchumene, Matola
                 </span>
               </div>
             </div>
@@ -821,13 +830,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-1 w-full">
                 <button
                   onClick={() => onNavigate('showrooms')}
-                  className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-[#7d5540] text-white font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] uppercase tracking-[0.14em] font-semibold hover:bg-[#fec9ae] hover:text-[#79523e] transition-colors"
+                  className="w-full sm:w-auto h-12 px-8 bg-[#FDCB00] text-black font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] uppercase tracking-[0.14em] font-semibold hover:bg-[#e8ba00] transition-colors"
                 >
                   Solicitar Orçamento B2B
                 </button>
                 <button
                   onClick={() => onNavigate('showrooms')}
-                  className="w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] uppercase tracking-[0.14em] font-semibold transition-colors"
+                  className="w-full sm:w-auto h-12 px-8 bg-white hover:bg-[#FDCB00] text-black font-['Plus_Jakarta_Sans'] text-xs sm:text-[11px] uppercase tracking-[0.14em] font-semibold transition-colors"
                 >
                   Agendar Visita ao Showroom
                 </button>

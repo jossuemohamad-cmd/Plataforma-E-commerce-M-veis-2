@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Product, ActiveScreen } from '../types';
 import { useLocalization } from '../context/LocalizationContext';
+import { Product360Viewer } from './Product360Viewer';
 
 interface ProductDetailScreenProps {
   product: Product;
@@ -141,13 +142,13 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
                 </span>
               </div>
 
-              {/* Botão Ver em 3D / AR */}
+              {/* Visualizador usa somente os ângulos reais cadastrados para o produto. */}
               <button
                 onClick={() => setShow3DModal(true)}
                 className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 px-3 sm:px-4 py-2.5 bg-white/95 backdrop-blur-md text-[#1a1c1b] hover:bg-black hover:text-white transition-all font-['Plus_Jakarta_Sans'] text-[11px] uppercase font-semibold tracking-wider flex items-center gap-2 shadow-md border border-[#e9e8e6]"
               >
                 <span className="material-symbols-outlined text-[18px]">view_in_ar</span>
-                <span>Visualizar em 3D / AR</span>
+                <span>{product.images.length >= 12 ? 'Visualizar em 360°' : 'Explorar vistas e material'}</span>
               </button>
 
               {/* Botão Favoritar no topo direito */}
@@ -234,7 +235,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
             <div>
               <div className="flex items-center justify-between font-['Plus_Jakarta_Sans'] text-xs text-[#7c766f] mb-1.5">
                 <span className="uppercase tracking-widest font-semibold text-[#7d5540]">
-                  {product.designer || 'Studio Aethel • Linha Pura'}
+                  {product.designer || 'Eden Colchões e Mobília'}
                 </span>
                 <span className="font-mono text-[11px]">SKU: {product.sku}</span>
               </div>
@@ -523,7 +524,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
 
               {includeTable && includeChair && (
                 <div className="px-3.5 py-1 bg-[#fec9ae] text-[#79523e] font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider">
-                  Desconto de Conjunto: -10.000 MT
+                  Desconto de Conjunto: -{formatPrice(10000)}
                 </div>
               )}
             </div>
@@ -673,48 +674,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
         </section>
       </div>
 
-      {/* Modal 3D Interativo Simulado */}
-      {show3DModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white max-w-2xl w-full p-4 sm:p-6 shadow-2xl relative border border-[#e9e8e6] max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain">
-            <button
-              onClick={() => setShow3DModal(false)}
-              className="absolute top-4 right-4 text-black hover:text-[#7d5540]"
-            >
-              <span className="material-symbols-outlined text-[24px]">close</span>
-            </button>
-
-            <span className="font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-widest text-[#7d5540] block mb-1">
-              Visualização Espacial
-            </span>
-            <h4 className="font-['Playfair_Display'] text-2xl text-[#1a1c1b] mb-4">
-              Modelo 3D Interativo • {product.title}
-            </h4>
-
-            <div className="relative aspect-[16/10] bg-[#1a1c1b] overflow-hidden flex items-center justify-center text-white">
-              <img
-                src={product.images[0]}
-                alt={product.title}
-                className="max-h-full max-w-full object-contain filter contrast-105"
-              />
-              <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/60 backdrop-blur-sm text-xs font-['Plus_Jakarta_Sans'] flex items-center gap-2">
-                <span className="material-symbols-outlined text-[16px] text-[#fec9ae]">3d_rotation</span>
-                <span>Gire 360° com o cursor do rato</span>
-              </div>
-            </div>
-
-            <div className="mt-4 flex justify-between items-center text-xs font-['Plus_Jakarta_Sans']">
-              <span className="text-[#7c766f]">Compatível com Apple AR QuickLook e Android SceneViewer</span>
-              <button
-                onClick={() => setShow3DModal(false)}
-                className="px-5 py-2 bg-black text-white uppercase text-[11px] font-semibold tracking-wider"
-              >
-                Concluir
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {show3DModal && <Product360Viewer images={product.images} title={product.title} onClose={() => setShow3DModal(false)} />}
     </div>
   );
 };
