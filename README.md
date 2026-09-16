@@ -4,7 +4,7 @@ MVP React/Vite com catálogo responsivo, autenticação, favoritos, carrinho, ch
 
 ## Executar localmente
 
-Requisitos: Node.js 20 ou superior e um projeto Supabase.
+Requisitos: Node.js 22 ou superior e um projeto Supabase.
 
 ```bash
 npm install
@@ -42,6 +42,10 @@ npm run check
 ```
 
 Esse comando executa TypeScript estrito, testes essenciais e o build de produção. As dependências são instaladas apenas em `node_modules` deste projeto.
+
+## Sincronização e publicação
+
+Neste computador, cada commit feito no branch `main` é enviado automaticamente ao GitHub pelo hook `.githooks/post-commit`. A Netlify recebe o push e publica o mesmo commit em `https://eden-colchoes-mobilia-mz.netlify.app/`.
 
 ## Fotografias 360° dos produtos
 

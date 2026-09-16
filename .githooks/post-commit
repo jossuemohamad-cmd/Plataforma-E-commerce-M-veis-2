@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Mantem o branch principal sincronizado com o GitHub. A Netlify recebe o
+# evento de push por webhook e publica o mesmo commit automaticamente.
+branch="$(git branch --show-current)"
+
+if [ "$branch" = "main" ]; then
+  echo "Sincronizando main com GitHub..."
+  git push origin main
+fi
