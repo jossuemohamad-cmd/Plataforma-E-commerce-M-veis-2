@@ -150,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header className="fixed top-0 left-0 w-full z-40 bg-[#faf9f7]/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#e9e8e6]/80">
         {/* Top Announcement Ribbon */}
-        <div className="eden-ticker-bar hidden bg-[#132240] text-white border-b border-[#132240] sm:block">
+        <div className="eden-ticker-bar bg-[#132240] text-white border-b border-[#132240]">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 h-8 sm:h-9 flex items-center justify-between font-['Plus_Jakarta_Sans'] text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-semibold gap-3">
             <div className="eden-ticker min-w-0 flex-1 overflow-hidden" aria-label="Informações e novidades Eden">
               <div className="eden-ticker-track flex w-max items-center whitespace-nowrap">
@@ -503,7 +503,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-4 sm:px-6 py-4 sm:py-5 space-y-4 shadow-xl max-h-[calc(100dvh-8.75rem)] sm:max-h-[calc(100dvh-7.25rem)] overflow-y-auto overscroll-contain">
+          <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-4 sm:px-6 py-4 sm:py-5 space-y-4 shadow-xl max-h-[calc(100dvh-10.75rem)] sm:max-h-[calc(100dvh-7.25rem)] overflow-y-auto overscroll-contain">
             {/* Currency & Language in Mobile Drawer */}
             <div className="hidden sm:flex sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e9e8e6] text-xs" data-no-translate>
               <div className="flex items-center justify-between sm:justify-start gap-2">

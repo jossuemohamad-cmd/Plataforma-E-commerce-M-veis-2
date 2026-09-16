@@ -279,7 +279,7 @@ function AppContent() {
       />
 
       {/* Container Central dos 9 Ecrãs do Protótipo */}
-      <main className={`flex-1 w-full min-w-0 ${activeScreen === 'home' ? '' : 'pt-16 sm:pt-[116px]'}`}>
+      <main className={`flex-1 w-full min-w-0 ${activeScreen === 'home' ? '' : 'pt-[96px] sm:pt-[116px]'}`}>
         {activeScreen === 'home' && (
           <HomeScreen
             products={products}
