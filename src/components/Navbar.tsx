@@ -8,6 +8,7 @@ interface NavbarProps {
   activeScreen: ActiveScreen;
   onNavigate: (screen: ActiveScreen) => void;
   cartCount: number;
+  isCartOpen?: boolean;
   onOpenCart: () => void;
   favoritesCount?: number;
   onOpenFavorites?: () => void;
@@ -21,6 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeScreen,
   onNavigate,
   cartCount,
+  isCartOpen = false,
   onOpenCart,
   favoritesCount = 0,
   onOpenFavorites,
@@ -139,6 +141,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsSearchModalOpen(false);
     onNavigate('catalogo');
   };
+
+  const isMenuSectionActive = mobileMenuOpen || [
+    'sobre', 'colecoes', 'showrooms', 'contacto', 'minha-conta', 'autenticacao'
+  ].includes(activeScreen);
 
   return (
     <>
@@ -301,7 +307,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <img
               src={edenLogo}
               alt="Eden — Colchões e Mobília"
-              className="h-12 w-auto max-w-[118px] object-contain sm:h-16 sm:max-w-[158px]"
+              className="h-11 w-auto max-w-[94px] object-contain sm:h-16 sm:max-w-[158px]"
             />
           </button>
 
@@ -334,6 +340,25 @@ export const Navbar: React.FC<NavbarProps> = ({
               </select>
               <span className="material-symbols-outlined pointer-events-none absolute right-2 text-[16px]">expand_more</span>
             </label>
+            <button
+              type="button"
+              onClick={() => onNavigate(user ? 'minha-conta' : 'autenticacao')}
+              className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#FDCB00] bg-[#f4f6f9] text-[#132240] shadow-sm"
+              aria-label={user ? 'Abrir minha conta' : 'Iniciar sessão'}
+              title={user ? user.name : 'Iniciar sessão'}
+            >
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : user ? (
+                <span className="text-sm font-bold uppercase">{user.name.trim().charAt(0) || 'E'}</span>
+              ) : (
+                <span className="material-symbols-outlined text-[21px]">person</span>
+              )}
+            </button>
           </div>
 
           {/* Primary Navigation Links (Desktop) */}
@@ -553,26 +578,40 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="mx-auto grid h-16 max-w-md grid-cols-5 items-end">
           <button
             type="button"
-            onClick={() => onNavigate('home')}
-            className={`flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold ${activeScreen === 'home' ? 'text-[#005EA4]' : 'text-[#596579]'}`}
+            onClick={() => {
+              onNavigate('home');
+              setMobileMenuOpen(false);
+            }}
+            aria-current={activeScreen === 'home' ? 'page' : undefined}
+            className={`relative flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold transition-colors ${activeScreen === 'home' ? 'bg-[#eef7fc] text-[#005EA4]' : 'text-[#596579]'}`}
           >
+            {activeScreen === 'home' && <span className="absolute top-0 h-1 w-7 rounded-b-full bg-[#FDCB00]" />}
             <span className="material-symbols-outlined text-[23px]">home</span>
             Início
           </button>
           <button
             type="button"
-            onClick={() => onNavigate('catalogo')}
-            className={`flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold ${activeScreen === 'catalogo' || activeScreen === 'produto' ? 'text-[#005EA4]' : 'text-[#596579]'}`}
+            onClick={() => {
+              onNavigate('catalogo');
+              setMobileMenuOpen(false);
+            }}
+            aria-current={activeScreen === 'catalogo' || activeScreen === 'produto' ? 'page' : undefined}
+            className={`relative flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold transition-colors ${activeScreen === 'catalogo' || activeScreen === 'produto' ? 'bg-[#eef7fc] text-[#005EA4]' : 'text-[#596579]'}`}
           >
+            {(activeScreen === 'catalogo' || activeScreen === 'produto') && <span className="absolute top-0 h-1 w-7 rounded-b-full bg-[#FDCB00]" />}
             <span className="material-symbols-outlined text-[23px]">storefront</span>
             Loja
           </button>
           <button
             type="button"
-            onClick={() => setIsSearchModalOpen(true)}
-            className="flex h-full flex-col items-center justify-center gap-0.5 text-[10px] font-bold text-[#132240]"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setIsSearchModalOpen(true);
+            }}
+            aria-current={isSearchModalOpen ? 'page' : undefined}
+            className={`flex h-full flex-col items-center justify-center gap-0.5 text-[10px] font-bold ${isSearchModalOpen ? 'text-[#005EA4]' : 'text-[#132240]'}`}
           >
-            <span className="-mt-5 grid h-12 w-12 place-items-center rounded-full border-4 border-white bg-[#FDCB00] shadow-lg">
+            <span className={`-mt-5 grid h-12 w-12 place-items-center rounded-full border-4 bg-[#FDCB00] shadow-lg transition-colors ${isSearchModalOpen ? 'border-[#005EA4]' : 'border-white'}`}>
               <span className="material-symbols-outlined text-[24px]">search</span>
             </span>
             Buscar
@@ -580,8 +619,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={onOpenCart}
-            className="relative flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold text-[#596579]"
+            aria-current={isCartOpen || activeScreen === 'checkout' ? 'page' : undefined}
+            className={`relative flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold transition-colors ${isCartOpen || activeScreen === 'checkout' ? 'bg-[#eef7fc] text-[#005EA4]' : 'text-[#596579]'}`}
           >
+            {(isCartOpen || activeScreen === 'checkout') && <span className="absolute top-0 h-1 w-7 rounded-b-full bg-[#FDCB00]" />}
             <span className="relative">
               <span className="material-symbols-outlined text-[23px]">shopping_bag</span>
               {cartCount > 0 && <span className="absolute -right-2 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#005EA4] px-1 text-[9px] text-white">{cartCount}</span>}
@@ -591,8 +632,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold ${mobileMenuOpen ? 'text-[#005EA4]' : 'text-[#596579]'}`}
+            aria-current={isMenuSectionActive ? 'page' : undefined}
+            className={`relative flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold transition-colors ${isMenuSectionActive ? 'bg-[#eef7fc] text-[#005EA4]' : 'text-[#596579]'}`}
           >
+            {isMenuSectionActive && <span className="absolute top-0 h-1 w-7 rounded-b-full bg-[#FDCB00]" />}
             <span className="material-symbols-outlined text-[23px]">{mobileMenuOpen ? 'close' : 'menu'}</span>
             Menu
           </button>

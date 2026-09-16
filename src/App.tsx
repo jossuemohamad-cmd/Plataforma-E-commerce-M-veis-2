@@ -269,6 +269,7 @@ function AppContent() {
         activeScreen={activeScreen}
         onNavigate={handleNavigate}
         cartCount={totalCartCount}
+        isCartOpen={isCartOpen}
         onOpenCart={() => setIsCartOpen(true)}
         favoritesCount={favorites.length}
         searchQuery={searchQuery}
