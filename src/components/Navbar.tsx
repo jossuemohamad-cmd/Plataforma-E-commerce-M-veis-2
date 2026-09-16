@@ -144,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header className="fixed top-0 left-0 w-full z-40 bg-[#faf9f7]/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#e9e8e6]/80">
         {/* Top Announcement Ribbon */}
-        <div className="eden-ticker-bar bg-[#132240] text-white border-b border-[#132240]">
+        <div className="eden-ticker-bar hidden bg-[#132240] text-white border-b border-[#132240] sm:block">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 h-8 sm:h-9 flex items-center justify-between font-['Plus_Jakarta_Sans'] text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-semibold gap-3">
             <div className="eden-ticker min-w-0 flex-1 overflow-hidden" aria-label="Informações e novidades Eden">
               <div className="eden-ticker-track flex w-max items-center whitespace-nowrap">
@@ -305,6 +305,37 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
           </button>
 
+          {/* Compact mobile controls */}
+          <div className="ml-auto flex items-center gap-1.5 sm:hidden" data-no-translate>
+            <label className="relative flex h-9 items-center rounded-[10px] bg-[#FDCB00] pl-3 pr-7 text-[11px] font-bold text-black shadow-sm">
+              <span className="sr-only">Alterar moeda</span>
+              <select
+                value={currency}
+                onChange={(event) => setCurrency(event.target.value as Currency)}
+                className="appearance-none bg-transparent pr-0 font-bold text-black outline-none"
+                aria-label="Alterar moeda"
+              >
+                <option value="MZN">MZN</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+              <span className="material-symbols-outlined pointer-events-none absolute right-2 text-[16px]">expand_more</span>
+            </label>
+            <label className="relative flex h-9 items-center rounded-[10px] bg-[#FDCB00] pl-3 pr-7 text-[11px] font-bold text-black shadow-sm">
+              <span className="sr-only">Alterar idioma</span>
+              <select
+                value={lang}
+                onChange={(event) => setLang(event.target.value as Language)}
+                className="appearance-none bg-transparent font-bold text-black outline-none"
+                aria-label="Alterar idioma"
+              >
+                <option value="PT">PT</option>
+                <option value="EN">EN</option>
+              </select>
+              <span className="material-symbols-outlined pointer-events-none absolute right-2 text-[16px]">expand_more</span>
+            </label>
+          </div>
+
           {/* Primary Navigation Links (Desktop) */}
           <nav className="hidden xl:flex items-center gap-4 2xl:gap-6 shrink-0">
             {navPages.map((page) => {
@@ -326,7 +357,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Action Buttons Cluster */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <div className="hidden items-center gap-1.5 sm:flex sm:gap-2.5 shrink-0">
             {/* Search Trigger Button (icon only - opens AJAX popup) */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
@@ -396,7 +427,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile hamburger menu toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2.5 text-[#4a4640] hover:text-[#1a1c1b] rounded-full hover:bg-[#efeeec]"
+              className="hidden p-2.5 text-[#4a4640] hover:text-[#1a1c1b] rounded-full hover:bg-[#efeeec] sm:flex xl:hidden"
               aria-label="Menu de Navegação"
             >
               <span className="material-symbols-outlined text-[24px]">
@@ -408,9 +439,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-4 sm:px-6 py-4 sm:py-5 space-y-4 shadow-xl max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain">
+          <div className="xl:hidden bg-white border-t border-[#e3e2e0] px-4 sm:px-6 py-4 sm:py-5 space-y-4 shadow-xl max-h-[calc(100dvh-8.75rem)] sm:max-h-[calc(100dvh-7.25rem)] overflow-y-auto overscroll-contain">
             {/* Currency & Language in Mobile Drawer */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e9e8e6] text-xs" data-no-translate>
+            <div className="hidden sm:flex sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e9e8e6] text-xs" data-no-translate>
               <div className="flex items-center justify-between sm:justify-start gap-2">
                 <span className="text-[#7c766f]">Moeda:</span>
                 {(['MZN', 'USD', 'EUR'] as Currency[]).map((c) => (
@@ -441,7 +472,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ))}
               </div>
             </div>
-            <div className="text-[10px] text-[#7c766f] space-y-0.5" data-no-translate>
+            <div className="hidden text-[10px] text-[#7c766f] space-y-0.5 sm:block" data-no-translate>
               <span className="block">{getExchangeLabel('USD', 'MZN')} • {getExchangeLabel('EUR', 'MZN')}</span>
               {translationError && <span className="block text-red-700">{translationError}</span>}
             </div>
@@ -452,7 +483,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setMobileMenuOpen(false);
                 setIsSearchModalOpen(true);
               }}
-              className="flex items-center justify-between bg-[#f4f3f1] p-3 text-xs text-[#7c766f] cursor-pointer hover:bg-[#ebe9e6]"
+              className="hidden items-center justify-between bg-[#f4f3f1] p-3 text-xs text-[#7c766f] cursor-pointer hover:bg-[#ebe9e6] sm:flex"
             >
               <span className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[18px] text-[#1a1c1b]">search</span>
@@ -488,9 +519,85 @@ export const Navbar: React.FC<NavbarProps> = ({
                 );
               })}
             </div>
+
+            <div className="grid grid-cols-2 gap-2 border-t border-[#e9e8e6] pt-3 sm:hidden">
+              <button
+                type="button"
+                onClick={() => {
+                  handleFavClick();
+                  setMobileMenuOpen(false);
+                }}
+                className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] bg-[#f4f6f9] px-3 text-xs font-bold text-[#132240]"
+              >
+                <span className="material-symbols-outlined text-[20px]">favorite</span>
+                Favoritos {favoritesCount > 0 ? `(${favoritesCount})` : ''}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onNavigate(user ? 'minha-conta' : 'autenticacao');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] bg-[#f4f6f9] px-3 text-xs font-bold text-[#132240]"
+              >
+                <span className="material-symbols-outlined text-[20px]">person</span>
+                {user ? 'Minha conta' : 'Entrar'}
+              </button>
+            </div>
           </div>
         )}
       </header>
+
+      {/* App-style mobile navigation */}
+      <nav className="eden-mobile-dock fixed inset-x-0 bottom-0 z-40 border-t border-[#dbe3ec] bg-white/95 px-2 pt-1.5 shadow-[0_-8px_24px_rgba(19,34,64,0.12)] backdrop-blur-xl sm:hidden" aria-label="Navegação móvel">
+        <div className="mx-auto grid h-16 max-w-md grid-cols-5 items-end">
+          <button
+            type="button"
+            onClick={() => onNavigate('home')}
+            className={`flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold ${activeScreen === 'home' ? 'text-[#005EA4]' : 'text-[#596579]'}`}
+          >
+            <span className="material-symbols-outlined text-[23px]">home</span>
+            Início
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('catalogo')}
+            className={`flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold ${activeScreen === 'catalogo' || activeScreen === 'produto' ? 'text-[#005EA4]' : 'text-[#596579]'}`}
+          >
+            <span className="material-symbols-outlined text-[23px]">storefront</span>
+            Loja
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsSearchModalOpen(true)}
+            className="flex h-full flex-col items-center justify-center gap-0.5 text-[10px] font-bold text-[#132240]"
+          >
+            <span className="-mt-5 grid h-12 w-12 place-items-center rounded-full border-4 border-white bg-[#FDCB00] shadow-lg">
+              <span className="material-symbols-outlined text-[24px]">search</span>
+            </span>
+            Buscar
+          </button>
+          <button
+            type="button"
+            onClick={onOpenCart}
+            className="relative flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold text-[#596579]"
+          >
+            <span className="relative">
+              <span className="material-symbols-outlined text-[23px]">shopping_bag</span>
+              {cartCount > 0 && <span className="absolute -right-2 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#005EA4] px-1 text-[9px] text-white">{cartCount}</span>}
+            </span>
+            Carrinho
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`flex h-full flex-col items-center justify-center gap-0.5 rounded-[10px] text-[10px] font-bold ${mobileMenuOpen ? 'text-[#005EA4]' : 'text-[#596579]'}`}
+          >
+            <span className="material-symbols-outlined text-[23px]">{mobileMenuOpen ? 'close' : 'menu'}</span>
+            Menu
+          </button>
+        </div>
+      </nav>
 
       {/* =========================================================
           POPUP DE PESQUISA COM FILTRO EM TEMPO REAL ("AJAX")

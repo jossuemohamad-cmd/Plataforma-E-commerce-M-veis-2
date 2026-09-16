@@ -263,7 +263,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] flex flex-col selection:bg-[#7d5540] selection:text-white font-['Plus_Jakarta_Sans'] text-[#1a1c1b]">
+    <div className="min-h-screen bg-[#faf9f7] pb-[calc(4.5rem+env(safe-area-inset-bottom))] flex flex-col selection:bg-[#7d5540] selection:text-white font-['Plus_Jakarta_Sans'] text-[#1a1c1b] sm:pb-0">
       {/* Barra de Navegação Principal */}
       <Navbar
         activeScreen={activeScreen}
@@ -278,7 +278,7 @@ function AppContent() {
       />
 
       {/* Container Central dos 9 Ecrãs do Protótipo */}
-      <main className={`flex-1 w-full min-w-0 ${activeScreen === 'home' ? '' : 'pt-[96px] sm:pt-[116px]'}`}>
+      <main className={`flex-1 w-full min-w-0 ${activeScreen === 'home' ? '' : 'pt-16 sm:pt-[116px]'}`}>
         {activeScreen === 'home' && (
           <HomeScreen
             products={products}
@@ -365,7 +365,7 @@ function AppContent() {
 
       {/* Notificação Toast Flutuante */}
       {toast && (
-        <div className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 sm:max-w-sm z-50 bg-[#1a1c1b] text-white px-4 sm:px-5 py-3.5 shadow-2xl border border-white/10 flex items-center gap-3 animate-fade-in">
+        <div className="fixed bottom-24 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 sm:max-w-sm z-50 bg-[#1a1c1b] text-white px-4 sm:px-5 py-3.5 shadow-2xl border border-white/10 flex items-center gap-3 animate-fade-in">
           <span className="material-symbols-outlined text-[#fec9ae] text-[20px]">
             check_circle
           </span>

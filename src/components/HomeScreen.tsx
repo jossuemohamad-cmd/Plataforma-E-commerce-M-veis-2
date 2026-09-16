@@ -60,7 +60,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ==========================================
           1. HERO SECTION ARQUITETÔNICO (100vh Full Viewport)
           ========================================== */}
-      <section className="home-hero eden-dark-surface relative w-full min-h-[100svh] sm:min-h-[660px] lg:h-screen flex items-end pb-8 sm:pb-16 pt-[104px] sm:pt-[116px] overflow-hidden bg-[#132240] text-white">
+      <section className="home-hero eden-dark-surface relative w-full min-h-[100svh] sm:min-h-[660px] lg:h-screen flex items-end pb-24 sm:pb-16 pt-16 sm:pt-[116px] overflow-hidden bg-[#132240] text-white">
         {/* Imagem de Fundo com Scrim Editorial Escuro */}
         <div className="absolute inset-0 z-0">
           <img
