@@ -376,7 +376,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <div className="relative">
                 <img
-                  src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
+                  src={user.avatar || '/images/catalog/3e19a9bf07b7eeac9c6e.jpg'}
                   alt={user.name}
                   className={`w-8 h-8 rounded-full object-cover ring-2 transition-all ${
                     'ring-[#e9e8e6] group-hover:ring-[#005EA4]'

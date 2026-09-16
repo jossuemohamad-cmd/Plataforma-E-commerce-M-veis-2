@@ -40,9 +40,9 @@ where c.slug='mesas' and r.slug='sala-de-estar' and s.slug='contemporaneo'
 on conflict (id) do update set price=excluded.price, stock_quantity=excluded.stock_quantity;
 
 insert into public.product_images (product_id, public_url, alt_text, position) values
-  ('sof-nuvola', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=85', 'Sofá Modular Nuvola', 0),
-  ('pol-kyoto', 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1600&q=85', 'Poltrona Kyoto', 0),
-  ('mes-monolito', 'https://images.unsplash.com/photo-1532372320572-cda25653a694?auto=format&fit=crop&w=1600&q=85', 'Mesa Travertino Monolito', 0)
+  ('sof-nuvola', '/images/catalog/cdeff7c06979638340af.jpg', 'Sofá Modular Nuvola', 0),
+  ('pol-kyoto', '/images/catalog/311b2e2ee849790ee135.jpg', 'Poltrona Kyoto', 0),
+  ('mes-monolito', '/images/catalog/02224d021037fa196349.jpg', 'Mesa Travertino Monolito', 0)
 on conflict (product_id, position) do update set public_url=excluded.public_url;
 
 insert into public.product_variants (product_id, sku, name, material, color, size, price_delta, stock_quantity) values
@@ -57,7 +57,7 @@ values ('BEMVINDO10', 'percent', 10, 25000, true)
 on conflict (code) do nothing;
 
 insert into public.showrooms (id, name, city, province, address, phone, email, hours, description, image_url, curator) values
-  ('maputo-flagship', 'Flagship Maputo', 'Maputo', 'Maputo Cidade', 'Av. Julius Nyerere, 1120', '+258 21 490 200', 'maputo@eden.co.mz', 'Seg–Sáb, 09:00–18:00', 'Acervo completo e consultoria residencial.', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85', 'Beatriz Mendes')
+  ('maputo-flagship', 'Flagship Maputo', 'Maputo', 'Maputo Cidade', 'Av. Julius Nyerere, 1120', '+258 21 490 200', 'maputo@eden.co.mz', 'Seg–Sáb, 09:00–18:00', 'Acervo completo e consultoria residencial.', '/images/catalog/e7653d8aeca24f9539c7.jpg', 'Beatriz Mendes')
 on conflict (id) do update set name=excluded.name, image_url=excluded.image_url;
 
 insert into public.showroom_products (showroom_id, product_id, hotspot_x, hotspot_y, featured) values

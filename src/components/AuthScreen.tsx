@@ -95,7 +95,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onNavigate }) => {
           {/* Foto de fundo com scrim suave */}
           <div className="absolute inset-0 z-0">
             <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhLlqgo3Z6Tpg1ioE_TBD6ATVxCZkqubNx0nSPWoyJRF_3EyeddV_CnxHgXUhux-YLBpCE9ZO9JuOYquZRmcfoWZCPInA9mta6uh2uiFFI3iUqe5WFqyvGG0Z8dXVwQ6EK0hsBdEyZcOaO1lvxDKSlINCRVSS8GG6Npoe-AUmUOAKdNuhAScY1OVy4y7WHmQG8jnA35FAiG6EFB2YbBGSLTgNMzvwZ7FDmYH4wI68d6GCxVv3SH-sdcA"
+              src="/images/catalog/a23cd55efff9293df9de.jpg"
               alt="Quarto Eden"
               className="w-full h-full object-cover opacity-30"
             />

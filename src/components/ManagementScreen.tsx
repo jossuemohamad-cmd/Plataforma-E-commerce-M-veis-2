@@ -30,7 +30,7 @@ export const ManagementScreen: React.FC<ManagementScreenProps> = ({
   const [newMaterial, setNewMaterial] = useState('Carvalho Maciço e Linho');
   const [newDimensions, setNewDimensions] = useState('220 x 95 x 80 cm');
   const newAmbiente = 'Sala de Estar';
-  const [newImage, setNewImage] = useState('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80');
+  const [newImage, setNewImage] = useState('/images/catalog/997e85e776c5aaed11e6.jpg');
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);

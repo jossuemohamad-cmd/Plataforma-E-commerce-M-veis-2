@@ -12,11 +12,11 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 28,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDFOUwpV0mFZOagYu4ikogGi21LreIVRE_W2J41_3TlGZGwWngCs5ZoVlsf3X8Ei938ut5llACSYSdoKBE0WIU1gqQQm--HXIQr5RMXRLnduFxsXfOO0QcKr3q6aio3-w1xYocgLp2jv6_A5DwX8WyfPGWDZv_RYyI4q__AQsy7Q-qW6NzsmUPFvNM-JCyrNl2lFFztzzbfBxpQ8kv3NDlrQAyQXf5H9bVsPAl_9Ny1JadRKnJXUdwmIA',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDuNlpJfhlovlhh_987fbxvXZMJiQlYfUMlMTXHuKjEa6Y-TDLePBr8SRofZA2ydWS2YV64wsugGsFKixZJcsPdB1Y5erj2uhJawryMJt213XlcqPRgpONMMPUmNWP4LgsH5C5utXodjt2FEmpre82iV4zv6RuQ82QUxagPjPXE5UVf_BjEgR0L1xA1m7BtX4c2KpzxFkNFsLJNzS5_zV-Ac9V-qkvY86_ix-u4JsDd-gPPwqqO768xKA',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDdWuGkeV9UIbstqU2wv4RiPtTih1F9MKYLcFLHM2otKwNwADip2sPokGoGi4e4b3Lebd7hr-i265If_PNODOmyMJovjARAc4a0ajyZMoOu66tttwljzuivmYtcfLgkHYy0i08PhJnlKnEywXfjL7lIM0TTa6koCSn4-rNKzVUQgEHMR3vVJlRHCLHo9q2vUMOYRPz8uHHmIsjSYTMYzn8h1mbDOsqc89uBmCZxpaG-fqGwvd_TozJJ4A',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuB7RT0xU1crYe9HGU3iEIxwXkOdwVZz6yrLTSTe6Sch2p0PNKH4vLZ-RiKqvEk-ct78pcZkAebNCb5fMyeL0XbvN5Gw4GeoEoRDYXOYiKu3euqzVhPK1_Q0g4zG06Q3uj0LMMu6xobnoYlEOGL6ZaWoRMbZpT7Na5EEkmiD2ZadGpkzxVOropfi4z0qc-q7vskbo3WonJxvwJANEYZmxgqXLU37EYS7nPFoFOpAiFoGdSD8E6fGIcCG1Q',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuANLuOEQ_Lds0I09Ss5N8Q-sdpdFXY_Gtk8Wo2WJpSeiDsFGaL5cpPcIG-fze84vtDfmsFqgHWl8AarujqV9tvWBgarypF8CHXbLArkQL4wT9vrvOyX58lOH6DRRaaRoWtB3fcDT0H_h5ze56Uw5bXqmAg8O9eoS9FSj9-yYhsns_-6PSs1a-D8cbvCRTpbzSP5SlXwPcNZ6JZkv6kUs0-rKDHrZ_Xagd0xn29yqCrsx81voATJIhwJuA'
+      '/images/catalog/9f8e28adb01246125f37.jpg',
+      '/images/catalog/a9a92f8c4870e442eeea.jpg',
+      '/images/catalog/211176e911795eb08422.jpg',
+      '/images/catalog/37f5aabcbcac5aa56267.jpg',
+      '/images/catalog/ef1ed3295184b8c3e84f.jpg'
     ],
     description: 'Conforto supremo com camadas de espuma D33 e fibra siliconada pluma revestidas em linho belga natural desestruturado. Estrutura em eucalipto tratado com juntas duplas cavilhadas para longevidade arquitetônica.',
     designer: 'Studio Aethel • Linha Pura',
@@ -68,9 +68,9 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.8,
     reviewCount: 19,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuC5AflP88jMBe1n-uh9m2tgHQ1zP2iI7i0mfvBhlfm03grETIsOt-YJsz34CQE2O4-7Eqv0ErUbVlB28x6zHL5LU0Xivu7pjV1W-OgmpiR6sugNu9xGnZJEN2qduR3ZLWgNC2aRxI0b8PyH5N2voH__jIps1prfrIaxlNRdYy9CEPFvvEKQCK-BQpndrJ2MNxR2oI_H2u__x0QVgSN7BwHY171xC33ymKPrucIJIT4tUo0rw3hUn1QTsQ',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCLHdGy1p1FnfPls0IiTm_nqxMxuZZDkcKzCKfIWUiwm0YthGyBiXM2L8pVmnmjPsn3YWb_jfufOZSdwrFT2zw4VYvw38_hkDY9J5k7OZJUJclkH6uuwR6ZyAV6j1ECy04oZLQihejivdqmR1GQFmKFYn4Xg_qubDg-n7HxNQ7HQNI5HPT_wdmrWAPN1nQcMZ0-TYEGhP8b25mSEqIFzBb6Tf0VyuH3vMr_gjVFobKCUlBHYfKnZTuaKQ',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCUwISSiIYocECG8MGQRvXoLV8kGxp3LhuyjgALvNeXe11d_91KSMcVhban5-n4M6YGeY05GIecbRIjF1YlRsjG46tvwkvHrtIXtnAlIc-kJRnAn6j_yGYfWw79Wm0KeQHNoU2PZ5Qb2Dz5ubH4rElideKAvboBefknYPpAtN80N5LT_ZR2Gqt9ZTatIS6cvaXSxx6Q725ya7crGOQC5kn5lwGoFtABEutBd4dj3JzzbzMEMdZi8eIwDQ'
+      '/images/catalog/1d6022a81c3515cd95da.jpg',
+      '/images/catalog/ad6cd0d861bd36a33a98.jpg',
+      '/images/catalog/36a31fdc3f797d5424b4.jpg'
     ],
     description: 'Poltrona de design assinado em carvalho maciço e estofamento em Bouclé Italiano com toque tátil aconchegante. Encaixes tradicionais de marcenaria japonesa adaptados ao clima contemporâneo.',
     designer: 'Studio Kengo',
@@ -108,9 +108,9 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 5.0,
     reviewCount: 12,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBOWeyV90QQaF4TzgZ8a_TYCXubvKGNZRZiJJuuMBDR2Tcnx4Y3woVemYd2-A6Q7EagxagsCaa8XmyfNnqCmQPnbb1CyGSIKKHhqgPJL0YpV-8X9P1-i2MtUIGfSgZITl88qVFt0Fu7rzfiP2X_C5sEBsFuA4itf4wWSAqOFSxX1DcJSyAecrPpTu-fHucA2-hDyTMz_YXeQwN-rflBgTeCRfEI4Bpu4x81M5fF02Lh0so4t_lzKXKcGQ',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuA9lnR1VMQMnw1P9sFqpqI9GS6BKjyxuyiWZy9HwBnbYt6HLWzFCtXTwOimwTZiCcKrxAb9AIqjUuYnAacEEKHA0hDQ9ANyhYe1DabL9tZw2f8oD2J0eoMGUPnwKvU0ArjlhCRff5IHzAX4n4lWrDafs8dXl97sYiAGGmf4KzeOdb6KJsoKNwJP1f8TQLbZEGz5GqnFPM0Wmqef_f2ilnjPP-04W8n6gmYOC0t1xNuG2G0vGAb2R2ICdQ',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCErLuOkj3lXwLhW_Ad05_V_Jx9FmnL0AGI_6fEJPMgadD9z_3UNEwl2o4FpScGQ8i8u9KWt0CWE1pNW2HuswyN_xO4U5Qtl3f07AsUJYnqRlfDMA2G3kyQAoxPMZlttpO2FurT08GBwxpJqm9O3jV7j_dgzXkHOqtAqQL7b_oLKcDiMW9-QcMKZSwqe-_oEs5hup2RWePQgkeAk-XzIQu44wMAbh8RffiJnxZYhadqRsPhsugwjDuICg'
+      '/images/catalog/7169cf20755c8a828a3c.jpg',
+      '/images/catalog/eb7933b99c4132240df1.jpg',
+      '/images/catalog/d9839fb82a960391ce64.jpg'
     ],
     description: 'Tampo contínuo monolítico em nogueira maciça com bordas chanfradas e pernas cônicas esculturais. Capacidade ergonômica ampla para 8 a 10 assentos em banquetes sofisticados.',
     designer: 'Atelier Aethel',
@@ -146,9 +146,9 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 15,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBAavmSa4sWYbzlsNEQVhKspQfO36zE6QKXXS5Y_F0wqlq3OZla9iHitOsVpufp4unSdFiM4ysT7TDs061WjwQ2vEk-5uQlF4xZ0HM9Kyk2ord5j1FIhGld102eHBDJ04sXEFURnqC0RrgMkXw9DLLIH3d5rMei2SqFjZRgI_YGefzqCO9sWuR5w106iarE2uNUMoUaWM4pVdF6ZR_soR-EppCWSQ0o9EdgMqtXuKNBRmU0Ye5Wf0FDuA',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDYY1EPWqgEyM-tOrTiWsZzvblNiJIEaitrCrMKvbLz74oLHhlgV8dasPo8nej_biF7p-FMRwMo5NsvFtriL92TOH1-UhPMDAyP7Rds14DRTdueCZEECkTQjRoOyKkJgE5060L-p5IYGgzy1y-n9eJArO4qXWLbu8QVnowOi6x_ZDNSXmd82GU832d0qjwNCBHGd5LOIZoyk1-Un9f03NVd6O9XSQhHa3xCVf3m7SSZQem5bgy53UZSNQ',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCxQk2Ml-dKRVh4kmQPbgBuMb4pKHOlhz4OI2u5XfJOo61ciyAalfsK3T20q3Z5pohdLCngV_x-fOP2IomqHqjSE1kFJfvsYzmxxTG6i4XkvWBuNMPjUmqX0CTmz-K3vyWGe70Dlwfw3a-3XRApqa17QHAj60h61NyZPGdFtIcDxxI8jK1nWp4wqxMICUj6xgZcIEplMHklX7zE_g1JdjwVKkOJYEdX4-wzkq647QwFV1Z0zrupC4P0VA'
+      '/images/catalog/b74d1e59f765291757c0.jpg',
+      '/images/catalog/dd2f3d21a06313c84bc7.jpg',
+      '/images/catalog/674f976bad4b591b8b8d.jpg'
     ],
     description: 'Cabeceira estofada envolvente em tecido linho bouclé com base rebaixada com efeito flutuante arquitetural. Projetada para proporcionar silêncio acústico e conforto supremo.',
     designer: 'Atelier Aethel',
@@ -184,9 +184,9 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 34,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAKyF7SOJhHnJjT39i0Tdym0EPhj6okIyCn3akzQGY2andKI4_x-BGjSalbgI29hqig9Qm6ibE62FikfLoZ_CNsXONJrhZN-geKtnhngN-rp8ZcpSer3NWRR4Vj5ME-20NZF9-yyFgHZI8hd11m0IFIYF6sATz9c7IbtRRI0FYp_YusfLqKjz3jv2PMm6fz46hENd1qJj4dX_fodcYYbciwEpmxFlTxVydWm8pmA57qq32Yy2XifC-tDw',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAhDfLz6g9kZvzxERi7CLaeI-oFls__Nz8etQhY-3-4emPpKTmC3zBZ99Z_RpEBnLztq_2Ve7GBmYjIsaPQhKff7estonvFbYdM2GCQGBRxdSfbWQUrcffTxmC3RKCYotwW0hF3Iq4tthCk9xaqk6zFk1hHSHzXfctjz41eLtONXiXwX97tK4BWEQZXZwXpRwik8eZ5G3r0HOBgMLKFgaG712S5pYODua6lKvwbSxXvDU0jGP8o9ZMEMQ',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDhSjXuWyufwHrYvbmfLchH7ZAbM2KM4YkZ1pl6L7kaO5m-eYIemCQ6kh1Ek4LLUyPim0Te-yWDC8TSCkzSLd747pWITJIGp75lXvF5HPHZ5PzaKTA4Tx-3duC6eVLM6OMjC8tE64A8ZNvd9kya-v4pXhg57RQMAMZptJ4YjoGVEfq7dN5SrLjLzxWOHnWzZDm2q1hiUPfhUttala03aHUTpQPfw8VsCxpTvO85KuqMp8FceEfpDfOIpw'
+      '/images/catalog/ccd4871f2e1ab7d4c606.jpg',
+      '/images/catalog/f6bb5e47360965b7cf86.jpg',
+      '/images/catalog/6a1500bf1b4090459333.jpg'
     ],
     description: 'Couro legítimo natural trabalhado à mão com costuras pespontadas e perfil esbelto em aço termolacado fosco. Ergonomia impecável para longas refeições de convívio.',
     designer: 'Edição Milão',
@@ -221,9 +221,9 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.8,
     reviewCount: 22,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAToltq86cxvb6pvYHnKZmJvKEy0_N0XDm1AD-rC-nLKRPdF7nBYzNcryPEm85h2qAFnBRSEYgUxaxznj2Mb2AUe0qSx3xw9BLyJUr5_tCVsijcJMrcyTsSRDS_TT_mRfS2R3HGEbA1bIr5SWNPgLfMtVGCsCLVc-S8hVQYq1quyYexM3GF8HMChChBT3WZPZcxSojZZSypzEInEaywtAVWpHpIrjYpfrm3IIjFrtp7_3-LqpgjqC0Uag',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDLXku-ICvQbCR5GYG_ejUtX1RaFZO4MExanSlkmnYnzXzQf-zXFDbkWmuiqtpssyWoqZNBd5xENBgF-tLT3idIhW5BODWtC8czjVRFfyVB-7LZecvW61zT354NCJZukNiav1XomssS8nMd9KSv7BfliNBdUFCa6djDtx1YuBD9qckzI1vZIVHRW0Hw4_mYif724lOJOsFFspk-JTm38ashd5vUpHN_YwXYtkReuDdrh5C3oDMd7Qxbeg',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCL-Ct-ZkvkVJXpnpLWln_94k00-E7iN0sx6ipAop44gnVq4d19LhkwKbBlO_n21uTbjaAS4cQA4oZxfC66rO6ZypiuMVS99X4IDtn1TPw4NGt9kRcM4s-_0QcoRRTwUcmprmtmdRiwnKI4leG-_M_RyQY2-Q_ZDMWnPbxQoHHxzVwSCNIhPdR1IqKzmSiPK48Ps-b-EzumYKVagnqFIfbU62oW9Pi28oAWZC7lnCaBxjkpEH_5Izw-WA'
+      '/images/catalog/02224d021037fa196349.jpg',
+      '/images/catalog/84c1fdabee8294cc9636.jpg',
+      '/images/catalog/89c1c366bbc9ffb27277.jpg'
     ],
     description: 'Escultura monolítica lapidada em Mármore Travertino Navona fosco com cavidades minerais naturais seladas. Cada bloco possui veios e texturas geológicas inteiramente exclusivas.',
     designer: 'Atelier de Cantaria Aethel',
@@ -258,9 +258,9 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 11,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBClIvy0YP_5iNUJRfndx9269_RqQlxHeyMx3zP-NrPb7EVC1FmaSvUeTiVqxpAU80fnRzGLUlcoPXinKVeWQuXFq2ryfDhjOGP81MTZ9MDvcn2wOc15Per5EEOqE8wmzt3hIQPXYiIHTmagGuVpPVJoJxk4Cs2zhAkilq6ZJ6z4ZO0QWJC3cqr-tPG0QciS_rkLQLPdypbl0L1k-Ot-UAF6EqRH4VtaICVDt3bGjwC8avieAw8SZzY0A',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAp45GNxNT6GJtnXiiLGtr223UyPJxCShq8WStww_1Fr4tDA9zKfjCyyJwBfabsQz19VMEGRRyimGGeruJpwjq14aUAVVM73scOqkE1ngBrH0jl-1L9E_CI2Y5alXVl4HOW-t2Tak0qLBlhnHQpaLcq6Mf6GStMBV1_QpdxYFV2Y7gFGeblvSEKvLvd21a7EIxYBK5CpXPooDA69Vp4rRxh5KHTWzPJHjqRobwWRsO349eHdb1iV9v8yg',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBAZjSNPVVry8hO3xe38l9lQ8m0ioGyBc5a_aEm4Re4swqsvjECZ9Dy1N1dxw20sY4WTuyqqsLp8Fr3ZOotTh85whc4KyYzaq9kXTRC_w7q11egRHQI0q1_PeO0ns0Pb5_q7ddAbra_NbSho1WM0kCiMKUaSalk0S6r9pcyUYB_D7k2Ulim9esI1PrWuHZ4GfLN5ooXdCs91H9CCTY0l2eHj_6-qUCcifeVKQqRjLgeqTNdsxgLc9tGaQ'
+      '/images/catalog/503afc0f0855c154b8d9.jpg',
+      '/images/catalog/13b64f98d86a2d9be304.jpg',
+      '/images/catalog/7458551f47ca44081739.jpg'
     ],
     description: 'Portas com marcenaria tridimensional em carvalho ebanizado e gaveteiro interno veludo. Ferragens alemãs ocultas com amortecimento pneumático suave.',
     designer: 'Atelier Aethel',
@@ -295,7 +295,7 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.8,
     reviewCount: 16,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCvrotGKaR8AeRoWMdD1oz-pau3-NO2TNFzzKWLZuREX_8fvvi9IwWiZi6Q2PKMmEkqF-7ByPm2M4KavW672kVImoKQFIPUsPF5jIQh7jivMISlwgRGLEd98z4M8dtxINxsNM6tkU6025CnLUgvAlUOzgFj33H6Q3OeoWK1DMkNw5pIzL1zULxlVQyvE1SgQZVxK_kKrMAmyqUehwLQsNHxidvGgqL4P64KuqySNoebP0XRUS30os7wKA'
+      '/images/catalog/cfb133c8d77495550219.jpg'
     ],
     description: 'Couro italiano pigmentado preto, suporte lombar anatômico e mecanismo sincronizado alemão em alumínio fundido polido.',
     designer: 'Linha Executiva',
@@ -330,7 +330,7 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 20,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBwzpcBriXZYjl1O5yNKRyOaQTw7jPSTBjihARIYQtT8vi7WSqQ2k74if7Xmoy9P2phUoguPtlEj-tZXrx8lEeIUcK1ONQXjNtoqf6M3HC2v2KfW7pNehgZ-2ufyt7vEhFhYHW21EMZrpjRtmATU2GZFQKsiFS7oa6LQx0rmTzyElCYS-bNXVYGu7-BjyLn6U9PC9cf_4BY8iRLYxw01JCOad9d3-opqcg4vZOqu_ZcuZHuGYRtgK5iBg'
+      '/images/catalog/5731f2dc1bdb4337976d.jpg'
     ],
     description: 'Coluna esbelta em latão acetinado escovado com dimerização suave por toque e base de contrapeso em granito negro fosco.',
     designer: 'Studio Luce',
@@ -360,7 +360,7 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 5.0,
     reviewCount: 9,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDcQpbs47lkIUlt-kH5pGlSEkAvqG0j773Qh_kSleAx8SXQVFCJTdwLgS-X89lDE6Zt6rnGW5zWHyFlzXHr6upjtqCdkxShpXy9Pay-FSZnQiOYl4wUPxM8q3xj_0-Kw80v0vzNsFFfRGFpQUhIFR5k74PsW3o1L5IDmYjau7FmxtI5FPEu6y-5sqyRapKNAUNeCkqVdFEK1M52mH0HFpQuSixB20Xha1TC-2ONd-rzz0EJ7FK2J-y1lA'
+      '/images/catalog/0df60e24676012f409df.jpg'
     ],
     description: 'Nogueira escurecida com calha interna para conectividade oculta e gaveteiro invisível com chave eletrônica por aproximação.',
     designer: 'Linha Corporativa',
@@ -390,7 +390,7 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.7,
     reviewCount: 14,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCIC4pZlbsXek45DzgqAW0bnHbjMOxj3w_gv2_BseGcNA7B7kc0WuTgIShF88WRFOo-StW2q9W-g9RtPK0fo7OJ9fLEqoxCYbIVrsLXAw_vZ_aCnoXiI7sWehxonqdGVAm6rG_npdwYsTLbBAh9XFKNUvHEyNdEEAzh764jOps_ZeYCYOvZ-vU-7eQEKN1tVRoSyg2GiyCmH2cRG668c04gsNxH71S1yekv-HPultCJpqwf-3rPi_mF8w'
+      '/images/catalog/b2e00be6c493ac8c7465.jpg'
     ],
     description: 'Estrutura em alumínio anodizado marítimo e tramas de corda náutica resistente a intempéries e raios UV. Almofadas drenáveis impermeáveis.',
     designer: 'Linha Litorânea',
@@ -424,7 +424,7 @@ export const AETHEL_PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 18,
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAGVYJvKdYGZdyY_T4X8uRJdCmsKvA77uufN0zBXf13Bi86jBEChoThHyNckoOnC4Pj9MX4f2_PQBVN5_woto4NAtvpiEx54uwwzvpSeBvsXH29hIkgg1nQooTx_x-W2Ss_qJu2znAnqL16b6pKfvHA4_kKFphji67XfS6thLbF0FRQJobVQ7cl2wjR5tcu5mt8UI6h0pvBc1_UI8s6caZEpfGJfUlhhiZazLOQllJJq7y2sChoXESHhA'
+      '/images/catalog/967cb15d4d01ee0cb789.jpg'
     ],
     description: 'Trama manual artesanal em fibras naturais não tingidas de lã da Nova Zelândia e juta dourada. Toque orgânico e conforto térmico.',
     designer: 'Tapeçaria Aethel',
@@ -456,7 +456,7 @@ export const SHOWROOM_LOCATIONS: ShowroomLocation[] = [
     phone: '+258 87 000 3388',
     email: 'esales@esm.co.mz',
     hours: 'Confirme o horário com a equipa de vendas antes da visita.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC5-Ks5K41_yb3W74U5GOIMN0dNHgZ7GD_rsEW6_bi0Y7BdFAankhsQAMS5NPiNYrzyRs-1fv7WE4gFiUDHlwA-MShEEwSGzqwkd2CiUWlIV5LwRTYPLoP0wSmJUNoLh9Ajn5F284sz6FuKzYb4mmwveNBXWIFoTKbjuM4xiljWMGEeQPny02giBtPMKnxTBfkH2vsnAkG7YBrLR9NOiUNdtrOyxP2QaXfkc3t0BSFWa4LsKTbeHOVwgw',
+    image: '/images/catalog/a00a7943b57f870b81f4.jpg',
     tag: 'Matola • Tchumene',
     badgeText: 'Unidade Eden / ESM',
     curator: 'Equipa Eden',
@@ -478,7 +478,7 @@ export const SHOWROOM_LOCATIONS: ShowroomLocation[] = [
     phone: '+258 87 000 3388',
     email: 'esales@esm.co.mz',
     hours: 'Confirme o horário com a equipa de vendas antes da visita.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAMb4iOOsumADxlbanYVNXaWGVaKYcOoM-RYWwbO60xU9p5-SjLP23k7jECmzBYzCkdaZ5JHd3b2Isyg4h7D3195B0F8A2Wviz9cclXMGm4hVvt8DE606PxtR_FcgE2c8e2xUDC8Yl3cxferaHErPVVncVHf1fTTmuP36dq4fkxX8hNUOEjbrrJ1JlBtWZ1pRoTsmQeB13mfDOof3VeAs1BOJ2Reu4XKTnn6n6C6rAKfIZ6WTc7CA0JzA',
+    image: '/images/catalog/fa75fb23ff9793e627ae.jpg',
     tag: 'Sofala • Beira',
     badgeText: 'Unidade Eden / ESM',
     curator: 'Equipa Eden',
@@ -497,7 +497,7 @@ export const SHOWROOM_LOCATIONS: ShowroomLocation[] = [
     phone: '+258 87 000 3388',
     email: 'esales@esm.co.mz',
     hours: 'Confirme o horário com a equipa de vendas antes da visita.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCzK-Vcz7-jZ70k3G3bkyjnuRGwy1O5T8GeM_pBgg9JTr7D93HItqoF33FMD-3jCreO5zfw-IIvrcnhn4it21nYWumAHgiwubzl3xszaXPheJOA7ap-crzqOV81FuasrrJ2o3-zJZRVpfyzO9nlhKOIlwD0YRe98dWnrc2_Sr9biG_VUNBIUO6m14y7tXjc-do4WTsQ1qu46204RPuu2ewV6qwXa5UCEB6Oj_K-mDZ4L2vDPNXmrAGycw',
+    image: '/images/catalog/ff27d6c8f619c49767fb.jpg',
     tag: 'Nampula Cidade',
     badgeText: 'Unidade Eden / ESM',
     curator: 'Equipa Eden',

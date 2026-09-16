@@ -67,7 +67,7 @@ export const MyAccountScreen: React.FC<MyAccountScreenProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex flex-col min-[420px]:flex-row min-[420px]:items-center gap-4 sm:gap-5 min-w-0">
               <img
-                src={user?.avatar || "https://lh3.googleusercontent.com/aida/AEtjO1X7_npcnp3WsXRdRLwlAatGP6-v7I2pr0CBvu6o1VAQMTGIKxcq90ZJ9f_z9dVX47dcBw5isRyGGS8Qp1O-FpN4mUafGaIHvi7kK6-sAkiqOTCQ2a7_ah0wRjNQN7rzMp_SZUktdN_13kCroYSJMWa3nFtHfIGUI6y2cKzSKExRXfY8n2w2fKpLJ6KNe8Hdyn8RxfhrpE2oYRNnnJyXGMFHTHpww8sWK_odYW1h44ANMrMY6BMkS_QkGZ6V"}
+                src={user?.avatar || "/images/catalog/cc67f0de4c14b7042373.jpg"}
                 alt={user?.name || "Usuário VIP"}
                 className="w-20 h-20 rounded-full object-cover ring-4 ring-[#f4f3f1] shadow-sm"
               />

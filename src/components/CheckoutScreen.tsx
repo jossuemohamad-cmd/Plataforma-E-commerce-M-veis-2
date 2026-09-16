@@ -513,7 +513,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 <>
                   <div className="flex items-center gap-3 pb-3 border-b border-[#f4f3f1]">
                     <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFOUwpV0mFZOagYu4ikogGi21LreIVRE_W2J41_3TlGZGwWngCs5ZoVlsf3X8Ei938ut5llACSYSdoKBE0WIU1gqQQm--HXIQr5RMXRLnduFxsXfOO0QcKr3q6aio3-w1xYocgLp2jv6_A5DwX8WyfPGWDZv_RYyI4q__AQsy7Q-qW6NzsmUPFvNM-JCyrNl2lFFztzzbfBxpQ8kv3NDlrQAyQXf5H9bVsPAl_9Ny1JadRKnJXUdwmIA"
+                      src="/images/catalog/9f8e28adb01246125f37.jpg"
                       alt="Sofá Modular Nuvola"
                       className="w-14 h-14 object-cover bg-[#efeeec] shrink-0"
                     />
@@ -526,7 +526,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
 
                   <div className="flex items-center gap-3 pb-3 border-b border-[#f4f3f1]">
                     <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5AflP88jMBe1n-uh9m2tgHQ1zP2iI7i0mfvBhlfm03grETIsOt-YJsz34CQE2O4-7Eqv0ErUbVlB28x6zHL5LU0Xivu7pjV1W-OgmpiR6sugNu9xGnZJEN2qduR3ZLWgNC2aRxI0b8PyH5N2voH__jIps1prfrIaxlNRdYy9CEPFvvEKQCK-BQpndrJ2MNxR2oI_H2u__x0QVgSN7BwHY171xC33ymKPrucIJIT4tUo0rw3hUn1QTsQ"
+                      src="/images/catalog/1d6022a81c3515cd95da.jpg"
                       alt="Poltrona Kyoto"
                       className="w-14 h-14 object-cover bg-[#efeeec] shrink-0"
                     />
@@ -539,7 +539,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
 
                   <div className="flex items-center gap-3 pb-3 border-b border-[#f4f3f1]">
                     <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAToltq86cxvb6pvYHnKZmJvKEy0_N0XDm1AD-rC-nLKRPdF7nBYzNcryPEm85h2qAFnBRSEYgUxaxznj2Mb2AUe0qSx3xw9BLyJUr5_tCVsijcJMrcyTsSRDS_TT_mRfS2R3HGEbA1bIr5SWNPgLfMtVGCsCLVc-S8hVQYq1quyYexM3GF8HMChChBT3WZPZcxSojZZSypzEInEaywtAVWpHpIrjYpfrm3IIjFrtp7_3-LqpgjqC0Uag"
+                      src="/images/catalog/02224d021037fa196349.jpg"
                       alt="Mesa Travertino Monolito"
                       className="w-14 h-14 object-cover bg-[#efeeec] shrink-0"
                     />

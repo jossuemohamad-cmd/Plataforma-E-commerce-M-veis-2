@@ -66,7 +66,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <img
             alt="Sala de estar Eden"
             className="w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000 ease-out"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt1H6nSKFrcVw1WThChsR6VGmFhmjmgmFStgpYIfzykfsGxBt3mOtruzm5g2f2yRgEnmcXNh0pGEwgm-k3Pqq1zcb_3kZKnk8qv21q_5GquxCuIrc6LhWrFRSI9wlYUz8MuAvdhJLY6wdX6kV18dGfL6ptsZbdFq61DXJEv_rQXH6NadUGxsuUNiJJIPyxlcRRkcszXh1OwyD8OG5-bQ5HnhyIe4Fy1ZnP3jlGKxKvJajZDW850Mnjlw"
+            src="/images/catalog/97ea803242ced53bca0d.jpg"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent"></div>
@@ -240,7 +240,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <img
                 alt="Sala de estar contemporânea Eden"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKwGw_hKxPRIHrB5wQIDHLJnspmVCf5_sGGsrvN4DVrNqcQCvaVVK2zjhgtneEzwDEoeZsQkK4wt75P-URcj2QinMe59ldXZeK506xjspAm2KP3qT4R-0HT4yFdO5VHDCLJfGplX8a0cu4FTz0dcGe5sAXzLv7kEtgeNAPY2G2LN9sLMSBahnBlx84cyalZ5M9JpOyTvKxvbgn86MF0Ve2xmoFAMjLS50a1T2HVgLsxMwEhTJzaIfSqw"
+                src="/images/catalog/b2233f3c7d788ebe3f06.jpg"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
               <div className="relative z-10">
@@ -264,7 +264,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <img
                 alt="Sala de Jantar & Banquete"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU8_ksFbvBPbwTNOOhhopdYb5i9kJfoBTPf2Ha8BHYi3AizUE6LyoEYO1en4xD0t4gr7xADuueEsZyJrDF2mDfSp_4z3ZAsM5_y40IHgmM7ThHDOw2IvnbllFfMucKcnatAR-BJWjukyphe7F4IObPZ6fOpwBgypNSGsz4Jy6JfnMmVdyvoiviAY1LhSaSFH5G1GUKb40cjmnjFVEbDqF2T_6HEr1e4TJutY7G8NJ2FDfZxi-9P1e4cA"
+                src="/images/catalog/d24be0f68949bdfb8120.jpg"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
               <div className="relative z-10">
@@ -288,7 +288,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <img
                 alt="Quarto & Suíte Master"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY9YYRkayFMwJWzd4NgYcjiiB8xcz9R8uVuFrxBciFSVjjMdspYETM4edQp0T35oX9ItkmwZdzhiKbwLUc_OTs-sX7JpyDU5vArEXwLy1SqvJ6XXv43m-AzuD2hmbsUtseYBnFLjuleFmb_HXqz_vzl-O5sW_rFo0DIGhHJcum-1m4TRfIdweIABUVm-Z61I_1o1MswS6Vk_HGueHrL4ytriMuAa8WWUJIe45Dz05mq0obYGMIlRv3Tw"
+                src="/images/catalog/9692edeb5d52055ae717.jpg"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
               <div className="relative z-10">
@@ -309,7 +309,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <img
                 alt="Escritório Executivo"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDARmLpV7hPu7LYOumsbeRC0q5Bnvk86m-fAE-SK76haATn2mgWbKdU361X8ZvqJTp1LA0nHOuCoEWnOr0gvkd0uBrSpqH9fBX16kJslK3R0VIcTfsyBJ2885vHmVUjpFqBUI0nwV_UuQ1Q5n6NooUohDqwBGvkaPJ6PVNWGFngmpO02i-V1osGUrIzekJ6PhBPCUqL0b-tbh6STUDXkejtO8z95rN6EWdaD_MZvGo7YOTWUb2zAHiiKw"
+                src="/images/catalog/64e5fb7f55cff203254b.jpg"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
               <div className="relative z-10">
@@ -331,7 +331,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <img
                   alt="Cozinha & Gourmet Integrada"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5qQva2igYCTVPtI23ujdFdoMHRBRc_7k4HA0mw90dhK4ZdkMcRmRBlmGxWytPNvYINMzGau19tCnouC3qyembo2LVVInyrTO4tbTaV8_ZQa1IHzLljtJ3h7KllGw_4TTM7JSkIx5Q2d-hlpwGFSxnfzV77aZ3TeKdPWM3ZumqiYKm8VvLYMiMP2YkWRrO4rveo_1YfQ57geK3-eSaXgoqxAZ27MOr89ZIZaJatMVBDd0EJTjZA-4odQ"
+                  src="/images/catalog/ab55237cbca90b8750f9.jpg"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
                 <div className="relative z-10">
@@ -351,7 +351,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <img
                   alt="Área Externa & Varanda"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWdX3O0B3QZRebVmAreVr2NoYXNpGMyVPME6GSrK0jtNK8wLoiuLFe-0Kxiwv7GQ146BHqyxLVRDe4EvWxc4eRctTpdxEaIkudE1uwl7aqNR5PNcVt1XgmVO25iL3BOF_HJWKRmHTf2zbD-teFiHaqMrW8QK0f5invyYdJm3HzWXnAOHVJryMhQz-4oSC4cv0Ia1mxLD1RXU9cBTjEaCGfpGqs-YZAI3iDcpLbPh6-C9tb69eDwmpY1g"
+                  src="/images/catalog/5d94c612fa390e32944c.jpg"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
                 <div className="relative z-10">
@@ -402,7 +402,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <img
               alt="Sala contemporânea Eden"
               className="w-full h-full object-cover object-center"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzNcLdHwhRYLwhV_sQdb-H0QSgf2N-NdsdwANIi8PaQ_vPEJv0eoLsT_pHp1UUUUzd_G9o7cfCklPK6lASCQTYYwx5ZlXHfMUhDlan5y-HtNVxQigHgeO8b5_KNZun7l4zJSrFUWncoov71lMkWJ4BX_pSFA_iyARj1nV3cFCz8pkZtDlucLiHlMUVNeUpOtCgmyWbOtsFrRTep2vEnHDRLQtkCAcHVhp-6xmrlP-3K__yD3tPGdlkTg"
+              src="/images/catalog/3dba9e8c1aab5e1532e1.jpg"
             />
             {/* Overlay Gradiente Sutil */}
             <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
@@ -429,7 +429,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     <img
                       alt="Sofá Modular Nuvola"
                       className="w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqeGOVTwh3UhSaQb52d7ReftrOAJbb08Mjed5XzCLhcvHFBb1hFOOaSJYpQAPOohG87FKXeJjwmbXt6Nl1Y0ymT0PdPFtzN05HZLUpAwWavBNidcdXSjBXqeU9dYxCtHyWm9fbEK88B3WZgu8j5y57M2JEtB-0HAA4cED2bBz8S3AubkkRLBsXNzg27NFH_igOMLZK8JhlYBFsxYTi79Y7agHaWegOQBbqA7VTngkFqtEOzZTDwidaMQ"
+                      src="/images/catalog/ba974d6777b7b5cfd39f.jpg"
                     />
                     <span className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm font-['Plus_Jakarta_Sans'] text-[10px] uppercase font-bold tracking-wider text-black">
                       Peça Principal
@@ -794,7 +794,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <img
                 alt="Atendimento personalizado Eden"
                 className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhLlqgo3Z6Tpg1ioE_TBD6ATVxCZkqubNx0nSPWoyJRF_3EyeddV_CnxHgXUhux-YLBpCE9ZO9JuOYquZRmcfoWZCPInA9mta6uh2uiFFI3iUqe5WFqyvGG0Z8dXVwQ6EK0hsBdEyZcOaO1lvxDKSlINCRVSS8GG6Npoe-AUmUOAKdNuhAScY1OVy4y7WHmQG8jnA35FAiG6EFB2YbBGSLTgNMzvwZ7FDmYH4wI68d6GCxVv3SH-sdcA"
+                src="/images/catalog/a23cd55efff9293df9de.jpg"
               />
               <div className="absolute inset-0 bg-black/20"></div>
               <div className="absolute bottom-4 left-4 p-3 bg-white/10 backdrop-blur-md border border-white/10">
