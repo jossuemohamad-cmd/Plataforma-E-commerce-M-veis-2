@@ -313,33 +313,72 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Compact mobile controls */}
           <div className="ml-auto flex items-center gap-1.5 sm:hidden" data-no-translate>
-            <label className="relative flex h-9 items-center rounded-[10px] bg-[#FDCB00] pl-3 pr-7 text-[11px] font-bold text-black shadow-sm">
-              <span className="sr-only">Alterar moeda</span>
-              <select
-                value={currency}
-                onChange={(event) => setCurrency(event.target.value as Currency)}
-                className="appearance-none bg-transparent pr-0 font-bold text-black outline-none"
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setCurrencyMenuOpen(!currencyMenuOpen);
+                  setLangMenuOpen(false);
+                }}
+                className="flex h-9 items-center gap-1 rounded-[10px] bg-[#FDCB00] pl-3 pr-2 text-[11px] font-bold text-black shadow-sm"
                 aria-label="Alterar moeda"
+                aria-expanded={currencyMenuOpen}
               >
-                <option value="MZN">MZN</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-              </select>
-              <span className="material-symbols-outlined pointer-events-none absolute right-2 text-[16px]">expand_more</span>
-            </label>
-            <label className="relative flex h-9 items-center rounded-[10px] bg-[#FDCB00] pl-3 pr-7 text-[11px] font-bold text-black shadow-sm">
-              <span className="sr-only">Alterar idioma</span>
-              <select
-                value={lang}
-                onChange={(event) => setLang(event.target.value as Language)}
-                className="appearance-none bg-transparent font-bold text-black outline-none"
+                {currency}
+                <span className="material-symbols-outlined text-[16px]">{currencyMenuOpen ? 'expand_less' : 'expand_more'}</span>
+              </button>
+              {currencyMenuOpen && (
+                <div className="absolute right-0 top-full z-50 mt-2 min-w-36 overflow-hidden rounded-[10px] border border-[#dbe3ec] bg-white p-1.5 shadow-2xl">
+                  {(['MZN', 'USD', 'EUR'] as Currency[]).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => {
+                        setCurrency(option);
+                        setCurrencyMenuOpen(false);
+                      }}
+                      className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2.5 text-left text-xs font-bold ${currency === option ? 'bg-[#fff3b5] text-black' : 'text-[#132240] hover:bg-[#eef7fc]'}`}
+                    >
+                      {option}
+                      {currency === option && <span className="material-symbols-outlined text-[17px] text-[#005EA4]">check</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setLangMenuOpen(!langMenuOpen);
+                  setCurrencyMenuOpen(false);
+                }}
+                className="flex h-9 items-center gap-1 rounded-[10px] bg-[#FDCB00] pl-3 pr-2 text-[11px] font-bold text-black shadow-sm"
                 aria-label="Alterar idioma"
+                aria-expanded={langMenuOpen}
               >
-                <option value="PT">PT</option>
-                <option value="EN">EN</option>
-              </select>
-              <span className="material-symbols-outlined pointer-events-none absolute right-2 text-[16px]">expand_more</span>
-            </label>
+                {lang}
+                <span className="material-symbols-outlined text-[16px]">{langMenuOpen ? 'expand_less' : 'expand_more'}</span>
+              </button>
+              {langMenuOpen && (
+                <div className="absolute right-0 top-full z-50 mt-2 min-w-32 overflow-hidden rounded-[10px] border border-[#dbe3ec] bg-white p-1.5 shadow-2xl">
+                  {(['PT', 'EN'] as Language[]).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => {
+                        setLang(option);
+                        setLangMenuOpen(false);
+                      }}
+                      className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2.5 text-left text-xs font-bold ${lang === option ? 'bg-[#fff3b5] text-black' : 'text-[#132240] hover:bg-[#eef7fc]'}`}
+                    >
+                      {option === 'PT' ? 'Português' : 'English'}
+                      {lang === option && <span className="material-symbols-outlined text-[17px] text-[#005EA4]">check</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button
               type="button"
               onClick={() => onNavigate(user ? 'minha-conta' : 'autenticacao')}
