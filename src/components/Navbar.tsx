@@ -165,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            <div className="hidden sm:flex self-stretch items-center gap-2 sm:gap-3 shrink-0 bg-[#FDCB00] px-3 sm:px-4 text-white">
+            <div className="hidden sm:flex self-stretch items-center gap-2 sm:gap-3 shrink-0 bg-[#FDCB00] px-3 sm:px-4 text-black">
               {/* Currency Selector with Dropdown */}
               <div className="relative" data-no-translate>
                 <button
@@ -174,10 +174,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setCurrencyMenuOpen(!currencyMenuOpen);
                     setLangMenuOpen(false);
                   }}
-                  className="flex h-full items-center gap-1 cursor-pointer px-2 text-white transition-colors hover:bg-black/10"
+                  className="flex h-full items-center gap-1 cursor-pointer px-2 text-black transition-colors hover:bg-black/10"
                   title="Alterar Moeda (MZN, USD, EUR)"
                 >
-                  <span className="font-bold text-white">
+                  <span className="font-bold text-black">
                     {currency}
                   </span>
                   <span className="material-symbols-outlined text-[14px]">
@@ -236,7 +236,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 )}
               </div>
 
-              <span className="text-white/70">|</span>
+              <span className="text-black/50">|</span>
 
               {/* Language Selector with Dropdown */}
               <div className="relative" data-no-translate>
@@ -246,10 +246,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setLangMenuOpen(!langMenuOpen);
                     setCurrencyMenuOpen(false);
                   }}
-                  className="flex h-full items-center gap-1 cursor-pointer px-2 text-white transition-colors hover:bg-black/10"
+                  className="flex h-full items-center gap-1 cursor-pointer px-2 text-black transition-colors hover:bg-black/10"
                   title="Alterar Idioma (Português / English)"
                 >
-                  <span className="font-bold text-white">{lang}</span>
+                  <span className="font-bold text-black">{lang}</span>
                   <span className="material-symbols-outlined text-[14px]">
                     {langMenuOpen ? 'expand_less' : 'expand_more'}
                   </span>
@@ -418,7 +418,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={c}
                     onClick={() => setCurrency(c)}
                     className={`px-2 py-1 text-[11px] font-bold ${
-                      currency === c ? 'bg-[#FDCB00] text-white' : 'bg-[#f4f3f1] text-[#4a4640]'
+                      currency === c ? 'bg-[#FDCB00] text-black' : 'bg-[#f4f3f1] text-[#4a4640]'
                     }`}
                   >
                     {c}
@@ -433,7 +433,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={l}
                     onClick={() => setLang(l)}
                     className={`px-2 py-1 text-[11px] font-bold ${
-                      lang === l ? 'bg-[#FDCB00] text-white' : 'bg-[#f4f3f1] text-[#4a4640]'
+                      lang === l ? 'bg-[#FDCB00] text-black' : 'bg-[#f4f3f1] text-[#4a4640]'
                     }`}
                   >
                     {l}
